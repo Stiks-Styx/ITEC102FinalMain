@@ -5,8 +5,7 @@ namespace _Game_Main
 {
     class Program : ConsoleGame
     {
-        private Player player1;
-        private Player player2;
+        private Player player;
         private Timer timer;
 
         private static void Main(string[] args)
@@ -20,27 +19,31 @@ namespace _Game_Main
         {
             Engine.SetPalette(Palettes.Pico8);
             Engine.Borderless();
-            //Engine.SetBackground(5);
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
 
-            player1 = new Player(Engine);
-            player2 = new Player(Engine);
+            player = new Player(Engine, new Point(10,10));
             timer = new Timer(UpdateScreen, null, 0, 1000 / TargetFramerate);
         }
 
         private void UpdateScreen(object state)
         {
-            player1.Update();
-            player1.Render();
+            // Update both players
+            player.Update();
+            //player2.Update();
+
+            // Render both players
+            player.Render();
+            //player2.Render();
+
         }
 
         public override void Render()
         {
+
         }
 
         public override void Update()
-        {
-        }
+        { }
     }
 }
