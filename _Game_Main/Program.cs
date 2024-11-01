@@ -12,7 +12,7 @@ namespace _Game_Main
         {
             int width = Console.WindowWidth;
             int height = Console.WindowHeight;
-            new Program().Construct(width, height, 1, 1, FramerateMode.Unlimited);
+            new Program().Construct(width*2, height*3, 1, 1, FramerateMode.Unlimited);
         }
 
         public override void Create()
@@ -23,7 +23,7 @@ namespace _Game_Main
             TargetFramerate = 60;
 
             player = new Player(Engine, new Point(10,10));
-            timer = new Timer(UpdateScreen, null, 0, 1000 / TargetFramerate);
+            timer = new Timer(UpdateScreen, null, 0, 500 / TargetFramerate);
         }
 
         private void UpdateScreen(object state)
@@ -40,7 +40,7 @@ namespace _Game_Main
 
         public override void Render()
         {
-
+            Engine.WriteText(new Point(0, 0), Convert.ToString(timer), 1);
         }
 
         public override void Update()

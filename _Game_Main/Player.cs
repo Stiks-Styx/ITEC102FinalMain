@@ -5,8 +5,18 @@ using NAudio.Wave;
 class Player
 {
     private readonly ConsoleEngine engine;
+
     public Point playerOnePosition;
     public Point playerTwoPosition;
+
+    public Point playerOneBullet;
+    public int playerOneBulletAmmount = 0;
+    public int playerOneBulletColor = 10;
+
+    public Point playerTwoBullet;
+    public int playerTwoBulletAmmount = 0;
+    public int playerTwoBulletColor = 20;
+
     private Point current;
     private Point current1;
     private Point current2;
@@ -25,7 +35,7 @@ class Player
                                  /*                                              */ new Point(3, 5),
                                 };
 
-    /*
+    /* To Do
      * Automatically change this if the user chooses 1/2player
      * if 1 player
      *  isOnPlayer will be true and isTwoPlayer will be false
@@ -47,6 +57,8 @@ class Player
         current2 = new Point(6, 0);
     }
 
+
+    // To Do Move this to Utilty.cs
     [DllImport("user32.dll")]
     private static extern short GetAsyncKeyState(int vKey);
 
@@ -61,11 +73,16 @@ class Player
     private const int VK_RETURN = 0x0D; // Enter
     private const int VK_SPACE = 0x20; // Space
 
-    private int attackCooldownFrames = 100; 
-    private int attackTime = 0;
-    private bool attackPressed = false; // Flag to check if attack button was pressed
+    private int attackCooldownFramesOne = 100; 
+    private int attackTimeOne = 0;
+    private bool attackPressedOne = false; // Flag to check if attack button was pressed
 
-    private int attack = 0;
+    private int attackCooldownFramesTwo = 100; 
+    private int attackTimeTwo = 0;
+    private bool attackPressedTwo = false; // Flag to check if attack button was pressed
+
+    private int attack1 = 0;
+    private int attack2 = 0;
 
     public void Update()
     {
@@ -83,25 +100,43 @@ class Player
             if ((GetAsyncKeyState(VK_SPACE) & 0x8000) != 0)
             {
                 // If attack is ready and button was not pressed last frame
-                if (attackTime == 0 && !attackPressed)
+                if (attackTimeOne == 0 && !attackPressedOne && attack1 == 0)
                 {
-                    PlaySound();
-                    attackTime = attackCooldownFrames; // Reset cooldown timer
-                    attack++; // Increment attack count to indicate an attack occurred
-                    attackPressed = true; // Set flag indicating button was pressed
+                    attackTimeOne = attackCooldownFramesOne; // Reset cooldown timer
+                    attack1++; // Increment attack count to indicate an attack occurred
+                    attackPressedOne = true; // Set flag indicating button was pressed
+
+                    // Set bullet's initial position at the tip of the character
+                    playerOneBullet = new Point(playerOnePosition.X + 3, playerOnePosition.Y + 5);
+                    playerOneBulletAmmount++;
+                    if (playerOneBulletAmmount == 1)
+                    {
+                        PlayOneSound();
+                    }
                 }
             }
             else
             {
-                // Reset the attackPressed flag and attack count when button is released
-                attackPressed = false;
-                attack = 0; // Reset attack count to allow a new attack on next press
+                // Reset the attackPressedOne flag and attack count when button is released
+                attackPressedOne = false;
+            }
+            // Update attack cooldown
+            if (attackTimeOne > 0)
+            {
+                attackTimeOne--;
             }
 
-            // Update attack time countdown
-            if (attackTime > 0)
+            // Move the bullet straight down if it has been fired
+            if (playerOneBulletAmmount == 1)
             {
-                attackTime--; // Decrease cooldown timer
+                playerOneBullet.Y--; // Only move bullet's Y coordinate upward
+
+                // Reset the bullet if it reaches the top of the console window
+                if (playerOneBullet.Y <= 0)
+                {
+                    playerOneBulletAmmount = 0;
+                    attack1 = 0;
+                }
             }
 
             // Add boundary checking if needed (to keep player within the console window)
@@ -119,10 +154,48 @@ class Player
             if ((GetAsyncKeyState(VK_LEFT) & 0x8000) != 0) playerTwoPosition.X--;
             if ((GetAsyncKeyState(VK_RIGHT) & 0x8000) != 0) playerTwoPosition.X++;
 
-            // Attack!!
+            // Attack!! - check if enough time has passed since the last attack
+            // Attack logic
             if ((GetAsyncKeyState(VK_RETURN) & 0x8000) != 0)
             {
-                PlaySound();
+                // If attack is ready and button was not pressed last frame
+                if (attackTimeTwo == 0 && !attackPressedTwo && attack2 == 0)
+                {
+                    attackTimeTwo = attackCooldownFramesTwo; // Reset cooldown timer
+                    attack2++; // Increment attack count to indicate an attack occurred
+                    attackPressedTwo = true; // Set flag indicating button was pressed
+
+                    // Set bullet's initial position at the tip of the character
+                    playerTwoBullet = new Point(playerTwoPosition.X + 3, playerTwoPosition.Y + 5);
+                    playerTwoBulletAmmount = 1;
+                    if (playerTwoBulletAmmount == 1)
+                    {
+                        PlayTwoSound();
+                    }
+                }
+            }
+            else
+            {
+                // Reset the attackPressedOne flag and attack count when button is released
+                attackPressedTwo = false;
+            }
+            // Update attack cooldown
+            if (attackTimeTwo > 0)
+            {
+                attackTimeTwo--;
+            }
+
+            // Move the bullet straight down if it has been fired
+            if (playerTwoBulletAmmount == 1)
+            {
+                playerTwoBullet.Y--; // Only move bullet's Y coordinate upward
+
+                // Reset the bullet if it reaches the top of the console window
+                if (playerTwoBullet.Y <= 0)
+                {
+                    playerTwoBulletAmmount = 0;
+                    attack2 = 0;
+                }
             }
 
             // Add boundary checking if needed (to keep player within the console window)
@@ -140,7 +213,6 @@ class Player
         if (isOnePlayer == true)
         {
             engine.WriteText(new Point(40, 0), Convert.ToString(playerOnePosition), 1);
-            //engine.Triangle(current + playerOnePosition, current2 + playerOnePosition, current1 + playerOnePosition, 255, ConsoleCharacter.Full);
 
             foreach (var item in character)
             {
@@ -148,19 +220,27 @@ class Player
                 engine.SetPixel(item + playerOnePosition, 255, ConsoleCharacter.Full);
                 foreach (var enemyItem in enemy)
                 {
-                    if (playerHitBox.X == enemyItem.X+playerTwoPosition.X && playerHitBox.Y == enemyItem.Y+playerTwoPosition.Y)
+                    if (false) // To Do write a condition if the player got hit by the enemy or got hit by an obstacle
                     {
                         engine.WriteText(new Point(70, 0), "Collision", 1);
                     }
                 }
             }
+
+            if (playerOneBulletAmmount == 1)
+            {
+                engine.SetPixel(playerOneBullet, playerOneBulletColor, ConsoleCharacter.Full);
+                engine.SetPixel(new Point(playerOneBullet.X - 1, playerOneBullet.Y), playerOneBulletColor, ConsoleCharacter.Full);
+                engine.SetPixel(new Point(playerOneBullet.X + 1, playerOneBullet.Y), playerOneBulletColor, ConsoleCharacter.Full);
+                engine.SetPixel(new Point(playerOneBullet.X, playerOneBullet.Y - 1), playerOneBulletColor, ConsoleCharacter.Full);
+            }
+
         }
 
 
         if (isTwoPlayer == true)
         {
             engine.WriteText(new Point(40, 1), Convert.ToString(playerTwoPosition), 1);
-            engine.Triangle(current + playerTwoPosition, current2 + playerTwoPosition, current1 + playerTwoPosition, 200, ConsoleCharacter.Full);
 
             foreach (var item in enemy)
             {
@@ -168,22 +248,45 @@ class Player
                 engine.SetPixel(item + playerTwoPosition, 1, ConsoleCharacter.Full);
                 foreach (var enemyItem in character)
                 {
-                    if (playerHitBox.X == enemyItem.X + playerOnePosition.X && playerHitBox.Y == enemyItem.Y + playerOnePosition.Y)
+                    if (false) // To Do write a condition if the player got hit by the enemy or got hit by an obstacle
                     {
                         engine.WriteText(new Point(70, 0), "Collision", 1);
                     }
                 }
             }
+
+
+            if (playerTwoBulletAmmount == 1)
+            {
+                engine.SetPixel(playerTwoBullet, playerTwoBulletColor, ConsoleCharacter.Full);
+                engine.SetPixel(new Point(playerTwoBullet.X - 1, playerTwoBullet.Y), playerTwoBulletColor, ConsoleCharacter.Full);
+                engine.SetPixel(new Point(playerTwoBullet.X + 1, playerTwoBullet.Y), playerTwoBulletColor, ConsoleCharacter.Full);
+                engine.SetPixel(new Point(playerTwoBullet.X, playerTwoBullet.Y - 1), playerTwoBulletColor, ConsoleCharacter.Full);
+            }
         }
 
-        string res = $"Attack Cooldown : {attackCooldownFrames}";
-        string res1 = $"Attack Time : {attackTime}";
-        string res2 = $"Attack Ammount : {attack}";
+        string res = $"Player 1 Attack Cooldown : {attackCooldownFramesOne}";
+        string res1 = $"Player 1 Attack Time : {attackTimeOne}";
+        string res2 = $"Player 1 Attack Ammount : {attack1}";
+        
+        string res3 = $"Player 2 Attack Cooldown : {attackCooldownFramesTwo}";
+        string res4 = $"Player 2 Attack Time : {attackTimeTwo}";
+        string res5 = $"Player 2 Attack Ammount : {attack2}";
+
+        string bullet1 = $"{playerOneBullet.Y} : {playerOneBulletAmmount}";
+        string bullet2 = $"{playerTwoBullet.Y} : {playerTwoBulletAmmount}";
 
         engine.WriteText(new Point(40, 3), res, 1);
         engine.WriteText(new Point(40, 4), res1, 1);
         engine.WriteText(new Point(40, 5), res2, 1);
 
+
+        engine.WriteText(new Point(40, 7), res3, 1);
+        engine.WriteText(new Point(40, 8), res4, 1);
+        engine.WriteText(new Point(40, 9), res5, 1);
+
+        engine.WriteText(new Point(40, 11), bullet1, 1);
+        engine.WriteText(new Point(40, 12), bullet2, 1);
         engine.DisplayBuffer();
     }
 
@@ -198,7 +301,32 @@ class Player
         return new Point(x, y);
     }
 
-    public void PlaySound()
+    public void PlayOneSound()
+    {
+        try
+        {
+            string mp3FilePath = "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\pew-pew-two-102442.mp3";
+            using (var audioFile = new AudioFileReader(mp3FilePath))
+            {
+                using (var outputDevice = new WaveOutEvent())
+                {
+                    outputDevice.Init(audioFile);
+                    outputDevice.Play();
+                    Thread.Sleep(500);
+                    outputDevice.Stop();
+                }
+            }
+        }
+        catch (System.AccessViolationException)
+        {
+            
+        }
+        catch (System.Runtime.InteropServices.COMException) 
+        { 
+
+        }
+    }
+    public void PlayTwoSound()
     {
         try
         {
