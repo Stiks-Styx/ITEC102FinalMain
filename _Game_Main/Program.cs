@@ -22,7 +22,7 @@ namespace _Game_Main
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
 
-            player = new Player(Engine, new Point(10,10));
+            player = new Player(Engine, new Point(10,10), false);// change the false to true if singleplayer
             timer = new Timer(UpdateScreen, null, 0, 500 / TargetFramerate);
         }
 
