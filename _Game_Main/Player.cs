@@ -84,7 +84,7 @@ class Player
         if (isOnePlayer)
         {
             HandlePlayerMovement(ref playerOnePosition, VK_W, VK_S, VK_A, VK_D);
-
+            
             if ((GetAsyncKeyState(VK_SPACE) & 0x8000) != 0 && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
             {
                 Point newBullet = new Point(playerOnePosition.X + 3, playerOnePosition.Y);
@@ -110,7 +110,6 @@ class Player
             playerTwoPosition = ConstrainPosition(playerTwoPosition);
         }
 
-        Render();
     }
 
     private void HandlePlayerMovement(ref Point position, int upKey, int downKey, int leftKey, int rightKey)
@@ -119,6 +118,7 @@ class Player
         if ((GetAsyncKeyState(downKey) & 0x8000) != 0) position.Y++;
         if ((GetAsyncKeyState(leftKey) & 0x8000) != 0) position.X--;
         if ((GetAsyncKeyState(rightKey) & 0x8000) != 0) position.X++;
+        position = ConstrainPosition(position);
     }
 
     private bool CanAttack(ref int attackTime, int cooldownFrames, ref bool attackPressed)
@@ -145,6 +145,7 @@ class Player
         bullets = updatedBullets;
     }
 
+
     private Point ConstrainPosition(Point position)
     {
         position.X = Math.Max(0, Math.Min(position.X, Console.WindowWidth - 1));
@@ -155,52 +156,43 @@ class Player
     public void Render()
     {
         engine.ClearBuffer();
+
         if (isOnePlayer)
         {
-            try
-            {
-                engine.WriteText(new Point(40, 0), playerOnePosition.ToString(), 1);
-                Parallel.ForEach(playerOne, item =>
-                {
-                    Point playerOneHitBox = new Point(item.X + playerOnePosition.X, item.Y + playerOnePosition.Y);
-                    engine.SetPixel(playerOneHitBox, 255, ConsoleCharacter.Full);
-                });
-
-                Parallel.ForEach(playerOneBullets, bullet =>
-                {
-                    engine.SetPixel(bullet, playerOneBulletColor, ConsoleCharacter.Full);
-                    engine.SetPixel(new Point(bullet.X - 1, bullet.Y), playerOneBulletColor, ConsoleCharacter.Full);
-                    engine.SetPixel(new Point(bullet.X + 1, bullet.Y), playerOneBulletColor, ConsoleCharacter.Full);
-                    engine.SetPixel(new Point(bullet.X, bullet.Y - 1), playerOneBulletColor, ConsoleCharacter.Full);
-                });
-            }
-            catch (System.InvalidOperationException) { }
+            engine.WriteText(new Point(40, 0), playerOnePosition.ToString(), 1);
+            RenderPlayer(playerOne, playerOnePosition, 255);
+            RenderBullets(playerOneBullets, playerOneBulletColor);
         }
 
         if (isTwoPlayer)
         {
-            try
-            {
-                engine.WriteText(new Point(40, 1), playerTwoPosition.ToString(), 1);
-                Parallel.ForEach(playerTwo, item =>
-                {
-                    Point playerTwoHitBox = new Point(item.X + playerTwoPosition.X, item.Y + playerTwoPosition.Y);
-                    engine.SetPixel(playerTwoHitBox, 255, ConsoleCharacter.Full);
-                });
-
-                Parallel.ForEach(playerTwoBullets, bullet =>
-                {
-                    engine.SetPixel(bullet, playerTwoBulletColor, ConsoleCharacter.Full);
-                    engine.SetPixel(new Point(bullet.X - 1, bullet.Y), playerTwoBulletColor, ConsoleCharacter.Full);
-                    engine.SetPixel(new Point(bullet.X + 1, bullet.Y), playerTwoBulletColor, ConsoleCharacter.Full);
-                    engine.SetPixel(new Point(bullet.X, bullet.Y - 1), playerTwoBulletColor, ConsoleCharacter.Full);
-                });
-            }
-            catch (System.InvalidOperationException) { }
+            engine.WriteText(new Point(40, 1), playerTwoPosition.ToString(), 1);
+            RenderPlayer(playerTwo, playerTwoPosition, 255);
+            RenderBullets(playerTwoBullets, playerTwoBulletColor);
         }
 
         engine.DisplayBuffer();
     }
+
+    private void RenderPlayer(Point[] player, Point position, int color)
+    {
+        foreach (var item in player)
+        {
+            Point playerHitBox = new Point(item.X + position.X, item.Y + position.Y);
+            engine.SetPixel(playerHitBox, color, ConsoleCharacter.Full);
+        }
+    }
+
+    private void RenderBullets(ConcurrentBag<Point> bullets, int color)
+    {
+        foreach (var bullet in bullets)
+        {
+            engine.SetPixel(bullet, color, ConsoleCharacter.Full);
+            // Add only the necessary pixels to limit render load
+            engine.SetPixel(new Point(bullet.X, bullet.Y - 1), color, ConsoleCharacter.Full);
+        }
+    }
+
 
     public void PlaySound(string filePath)
     {

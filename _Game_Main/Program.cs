@@ -8,6 +8,8 @@ namespace _Game_Main
         private Player player;
         private Timer timer;
 
+        List<_Enemy> enemies;
+
         private static void Main(string[] args)
         {
             int width = Console.WindowWidth;
@@ -23,27 +25,38 @@ namespace _Game_Main
             TargetFramerate = 60;
 
             player = new Player(Engine, new Point(10,10), false);// change the false to true if singleplayer
-            timer = new Timer(UpdateScreen, null, 0, 500 / TargetFramerate);
+            timer = new Timer(UpdateScreen, null, 0, 1000 / TargetFramerate);
+
+            // List to store all active enemies
+            enemies = new List<_Enemy>();
+
+            // Add a Small enemy to the game
+            enemies.Add(new Small(Engine, new Point(10, 5))); // Starting position (10,5)
         }
 
         private void UpdateScreen(object state)
         {
-            // Update both players
+            // Update players
             player.Update();
-            //player2.Update();
 
-            // Render both players
+            // Render players
             player.Render();
-            //player2.Render();
+
+            foreach (var enemy in enemies)
+            {
+                enemy.EnemyMovement();
+                enemy.EnemyAttack();
+                enemy.EnemyRender();
+            }
 
         }
 
         public override void Render()
         {
-            Engine.WriteText(new Point(0, 0), Convert.ToString(timer), 1);
         }
 
         public override void Update()
-        { }
+        { 
+        }
     }
 }
