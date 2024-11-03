@@ -8,13 +8,13 @@ namespace test
         int option = 0;
         private static FigletFont font;
         bool isMainStart = true;
-
+        private int i = 0;
 
         private static void Main(string[] args)
         {
             int width = Console.WindowWidth;
             int height = Console.WindowHeight;
-            new Program().Construct(width + 150, height, 1, 1, FramerateMode.Unlimited);
+            new Program().Construct(width + 150, height*2, 1, 1, FramerateMode.Unlimited);
         }
 
         public override void Create()
@@ -30,43 +30,37 @@ namespace test
         {
             if (Engine.GetKeyDown(ConsoleKey.Escape))
                 Environment.Exit(0);
+
             if (Engine.GetKeyDown(ConsoleKey.Enter))
             {
-                isMainStart = false;
+                if (isMainStart)
+                {
+                    isMainStart = false;
+                }
+                else
+                {
+                    switch (option)
+                    {
+                        case 0: OnePlayer(); break;   // 1 player
+                        case 2: TwoPlayer(); break;   // 2 players
+                        case 4: Score(); break;       // View Scores
+                        case 6: Environment.Exit(0); return;  // Exit
+                    }
+                }
             }
 
-            if (Engine.GetKey(ConsoleKey.Enter) && option == 0)
-            {
-                // 1 player
-                OnePlayer();
-            }
-            if (Engine.GetKey(ConsoleKey.Enter) && option == 2)
-            {
-                // 2 players
-                TwoPlayer();
-            }
-            if (Engine.GetKey(ConsoleKey.Enter) && option == 4)
-            {
-                // View Scores
-                Score();
-            }
-            if (Engine.GetKey(ConsoleKey.Enter) && option == 6)
-            {
-                Environment.Exit(0);
-            }
-
-            if (Engine.GetKeyDown(ConsoleKey.W) && option != 0)
-                option -=2;
-            if (Engine.GetKeyDown(ConsoleKey.S) && option != 6)
-                option +=2;
+            if (Engine.GetKeyDown(ConsoleKey.W) && option > 0)
+                option -= 2;
+            if (Engine.GetKeyDown(ConsoleKey.S) && option < 6)
+                option += 2;
         }
 
         public override void Render()
         {
-            if (isMainStart == true)
+            if (isMainStart)
                 MenuStart();
-            else { MainMenu(); }
-            
+            else
+                MainMenu();
         }
 
         public void MainMenu()
@@ -83,38 +77,61 @@ namespace test
         public void MenuStart()
         {
             Engine.ClearBuffer();
-            try
+            int colorValue = 1; // Starting color value
+
+            while (true)
             {
-                Engine.WriteFiglet(new Point(0, 0), "Welcome", font, 1);
-                Engine.WriteFiglet(new Point(0, 10), "To Our", font, 1);
-                Engine.WriteFiglet(new Point(0, 20), "Game", font, 1);
-                Engine.WriteText(new Point(0, 30), "Press Enter To Continue...", 1);
+                for (i = 0; i <= 3; i++)
+                {
+                    Engine.ClearBuffer(); // Clear the buffer to redraw
+
+                    // Write the text with the current color value
+                    Engine.WriteFiglet(new Point(0, i), "Looking", font, colorValue);
+                    Engine.WriteFiglet(new Point(0, i + 10), "for one", font, colorValue+1);
+                    Engine.WriteFiglet(new Point(0, i + 20), "Member", font, colorValue+2);
+                    Engine.WriteFiglet(new Point(0, i + 30), "ITEC-102", font, colorValue+3);
+                    Engine.DisplayBuffer();
+
+                    System.Threading.Thread.Sleep(500); // Adjust the speed of the animation
+
+                    // Increment colorValue and wrap around if it exceeds 10
+                    colorValue++;
+                    if (colorValue > 5)
+                        colorValue = 2;
+                }
+
+                if (Engine.GetKeyDown(ConsoleKey.Enter))
+                    break; // Exit the animation loop when Enter is pressed
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            Engine.DisplayBuffer();
         }
+
 
         public void Score()
         {
             Engine.ClearBuffer();
-            Engine.WriteText(new Point(0, 50), "Scores", 1);
+            Engine.WriteText(new Point(0, 0), "Scores", 1);
+            // Here you can add code to display actual scores
+            Engine.WriteText(new Point(0, 2), "No scores to display yet.", 1);
             Engine.DisplayBuffer();
+            System.Threading.Thread.Sleep(2000); // Pause to allow players to see the score screen
         }
+
         public void OnePlayer()
         {
             Engine.ClearBuffer();
-            Engine.WriteText(new Point(0, 50), "1-Player", 1);
+            Engine.WriteText(new Point(0, 0), "1-Player mode selected.", 1);
+            // You can add your game logic here
             Engine.DisplayBuffer();
+            System.Threading.Thread.Sleep(2000); // Pause to allow players to see the message
         }
+
         public void TwoPlayer()
         {
             Engine.ClearBuffer();
-            Engine.WriteText(new Point(0, 50), "2-Player", 1);
+            Engine.WriteText(new Point(0, 0), "2-Player mode selected.", 1);
+            // You can add your game logic here
             Engine.DisplayBuffer();
+            System.Threading.Thread.Sleep(2000); // Pause to allow players to see the message
         }
-
     }
 }
