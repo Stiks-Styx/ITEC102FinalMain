@@ -16,3 +16,14 @@ C:\Users\Styx\Desktop\ITEC102FinalMain\test1\obj\Debug\net8.0\refint\test1.dll
 C:\Users\Styx\Desktop\ITEC102FinalMain\test1\obj\Debug\net8.0\test1.pdb
 C:\Users\Styx\Desktop\ITEC102FinalMain\test1\obj\Debug\net8.0\test1.genruntimeconfig.cache
 C:\Users\Styx\Desktop\ITEC102FinalMain\test1\obj\Debug\net8.0\ref\test1.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\AppSettings.json
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Configuration.UserSecrets.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\test1\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll

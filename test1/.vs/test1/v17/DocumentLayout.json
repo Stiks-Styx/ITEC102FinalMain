@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
@@ -28,10 +28,9 @@
               "RelativeDocumentMoniker": "ConsoleHelper.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\test1\\ConsoleHelper.cs",
               "RelativeToolTip": "ConsoleHelper.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwBEAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAQwBoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-31T00:29:12.638Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-31T00:29:12.638Z"
             },
             {
               "$type": "Document",
@@ -41,7 +40,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\test1\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAQwBcAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAgwK4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-31T00:19:04.486Z",
               "EditorCaption": ""
