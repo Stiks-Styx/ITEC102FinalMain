@@ -85,7 +85,7 @@ class Player
         {
             HandlePlayerMovement(ref playerOnePosition, VK_W, VK_S, VK_A, VK_D);
             
-            if ((GetAsyncKeyState(VK_SPACE) & 0x8000) != 0 && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
+            && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
             {
                 Point newBullet = new Point(playerOnePosition.X + 3, playerOnePosition.Y);
                 playerOneBullets.Add(newBullet);

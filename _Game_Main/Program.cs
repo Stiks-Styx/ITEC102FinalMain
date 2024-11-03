@@ -14,13 +14,14 @@ namespace _Game_Main
         {
             int width = Console.WindowWidth;
             int height = Console.WindowHeight;
-            new Program().Construct(width*2, height*3, 1, 1, FramerateMode.Unlimited);
+            new Program().Construct(200, 100, 1, 1, FramerateMode.Unlimited);
         }
 
         public override void Create()
         {
             Engine.SetPalette(Palettes.Pico8);
             Engine.Borderless();
+            Engine.Frame(new Point(1, 1), new Point(199, 99), 2);
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
 
