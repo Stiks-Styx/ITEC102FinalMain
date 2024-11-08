@@ -102,12 +102,12 @@ namespace test1
             {
                 MoveTriangle(); // Move the triangle based on current direction
             }
-            if (IsKeyPressed(VK_A))
+            if (IsKeyPressed(VK_D))
             {
                 rotationAmount += rotationSpeed; // Rotate counter-clockwise
                 UpdateTheta();
             }
-            if (IsKeyPressed(VK_D))
+            if (IsKeyPressed(VK_A))
             {
                 rotationAmount -= rotationSpeed; // Rotate clockwise
                 UpdateTheta();

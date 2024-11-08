@@ -9,29 +9,33 @@ class Player
     public Point playerOnePosition;
     public Point playerTwoPosition;
 
-    public ConcurrentBag<Point> playerOneBullets = new ConcurrentBag<Point>();
+    public List<Point> playerOneBullets = new List<Point>();
     public int playerOneBulletColor = 10;
 
-    public ConcurrentBag<Point> playerTwoBullets = new ConcurrentBag<Point>();
+    public List<Point> playerTwoBullets = new List<Point>();
     public int playerTwoBulletColor = 20;
 
     private Point current;
     private Point current1;
     private Point current2;
 
-    public Point[] playerOne = { new Point(0, 0), new Point(1, 0), new Point(2, 0), new Point(3, 0), new Point(4, 0), new Point(5, 0), new Point(6, 0),
-                                 /*           */  new Point(1, 1), new Point(2, 1), new Point(3, 1), new Point(4, 1), new Point(5, 1),
-                                 /*           */  new Point(1, 2), new Point(2, 2), new Point(3, 2), new Point(4, 2), new Point(5, 2),
-                                 /*                             */ new Point(2, 3), new Point(3, 3), new Point(4, 3),
-                                 /*                             */ new Point(2, 4), new Point(3, 4), new Point(4, 4),
-                                 /*                                              */ new Point(3, 5),
+    public Point[] playerOne = { 
+new Point(0,0),
+new Point(0,1),new Point(1,1),new Point(2,1),
+new Point(0,2),new Point(1,2),new Point(2,2),new Point(3,2),
+new Point(0,3),new Point(1,3),new Point(2,3),new Point(3,3),new Point(4,3),
+new Point(0,4),new Point(1,4),new Point(2,4),new Point(3,4),
+new Point(0,5),new Point(1,5),new Point(2,5),
+new Point(0,6)
                                 };
-    public Point[] playerTwo = { new Point(0, 0), new Point(1, 0), new Point(2, 0), new Point(3, 0), new Point(4, 0), new Point(5, 0), new Point(6, 0),
-                                 /*           */  new Point(1, 1), new Point(2, 1), new Point(3, 1), new Point(4, 1), new Point(5, 1),
-                                 /*           */  new Point(1, 2), new Point(2, 2), new Point(3, 2), new Point(4, 2), new Point(5, 2),
-                                 /*                             */ new Point(2, 3), new Point(3, 3), new Point(4, 3),
-                                 /*                             */ new Point(2, 4), new Point(3, 4), new Point(4, 4),
-                                 /*                                              */ new Point(3, 5),
+    public Point[] playerTwo = { 
+new Point(0,0),
+new Point(0,1),new Point(1,1),
+new Point(0,2),new Point(1,2),new Point(2,2),
+new Point(0,3),new Point(1,3),new Point(2,3),new Point(3,3),
+new Point(0,4),new Point(1,4),new Point(2,4),
+new Point(0,5),new Point(1,5),
+new Point(0,6)
                                 };
 
     bool isOnePlayer;
@@ -53,8 +57,8 @@ class Player
             playerTwoPosition = new Point(initialPosition.X + 10, initialPosition.Y); // offset for player two
         }
         current = new Point(0, 0);
-        current1 = new Point(3, 5);
-        current2 = new Point(6, 0);
+        current1 = new Point(5, 3);
+        current2 = new Point(0, 6);
     }
 
     [DllImport("user32.dll")]
@@ -84,15 +88,14 @@ class Player
         if (isOnePlayer)
         {
             HandlePlayerMovement(ref playerOnePosition, VK_W, VK_S, VK_A, VK_D);
-            
-            && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
+
+            if ((GetAsyncKeyState(VK_SPACE) & 0x8000) != 0 && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
             {
-                Point newBullet = new Point(playerOnePosition.X + 3, playerOnePosition.Y);
+                Point newBullet = new Point(playerOnePosition.X, playerOnePosition.Y + 3);
                 playerOneBullets.Add(newBullet);
-                PlaySound("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\pew-pew-two-102442.mp3");
             }
 
-            UpdateBullets(ref playerOneBullets);
+            UpdateBullets(playerOneBullets);
             playerOnePosition = ConstrainPosition(playerOnePosition);
         }
 
@@ -101,12 +104,11 @@ class Player
             HandlePlayerMovement(ref playerTwoPosition, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT);
             if ((GetAsyncKeyState(VK_RETURN) & 0x8000) != 0 && CanAttack(ref attackTimeTwo, attackCooldownFramesTwo, ref attackPressedTwo))
             {
-                Point newBullet = new Point(playerTwoPosition.X + 3, playerTwoPosition.Y);
+                Point newBullet = new Point(playerTwoPosition.X, playerTwoPosition.Y + 3);
                 playerTwoBullets.Add(newBullet);
-                PlaySound("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\pew-pew-two-102442.mp3");
             }
 
-            UpdateBullets(ref playerTwoBullets);
+            UpdateBullets(playerTwoBullets);
             playerTwoPosition = ConstrainPosition(playerTwoPosition);
         }
 
@@ -134,16 +136,26 @@ class Player
         return false;
     }
 
-    private void UpdateBullets(ref ConcurrentBag<Point> bullets)
+    private void UpdateBullets(List<Point> bullets)
     {
-        var updatedBullets = new ConcurrentBag<Point>();
-        foreach (var bullet in bullets)
+        for (int i = bullets.Count - 1; i >= 0; i--)
         {
-            Point newBullet = new Point(bullet.X, bullet.Y - 1);
-            if (newBullet.Y > 0) updatedBullets.Add(newBullet);
+            // Move bullet upward by 1 step (or as per your logic)
+            Point newBullet = new Point(bullets[i].X+1, bullets[i].Y);
+
+            // Check if the bullet is still within the screen bounds
+            if (newBullet.Y >= 0)
+            {
+                bullets[i] = newBullet;
+            }
+            else
+            {
+                bullets.RemoveAt(i); // Remove bullet if it goes off-screen
+            }
         }
-        bullets = updatedBullets;
     }
+
+
 
 
     private Point ConstrainPosition(Point position)
@@ -160,14 +172,14 @@ class Player
         if (isOnePlayer)
         {
             engine.WriteText(new Point(40, 0), playerOnePosition.ToString(), 1);
-            RenderPlayer(playerOne, playerOnePosition, 255);
+            RenderPlayer(playerOne, playerOnePosition, 4);
             RenderBullets(playerOneBullets, playerOneBulletColor);
         }
 
         if (isTwoPlayer)
         {
             engine.WriteText(new Point(40, 1), playerTwoPosition.ToString(), 1);
-            RenderPlayer(playerTwo, playerTwoPosition, 255);
+            RenderPlayer(playerTwo, playerTwoPosition, 2);
             RenderBullets(playerTwoBullets, playerTwoBulletColor);
         }
 
@@ -183,43 +195,17 @@ class Player
         }
     }
 
-    private void RenderBullets(ConcurrentBag<Point> bullets, int color)
-    {
-        foreach (var bullet in bullets)
-        {
-            engine.SetPixel(bullet, color, ConsoleCharacter.Full);
-            // Add only the necessary pixels to limit render load
-            engine.SetPixel(new Point(bullet.X, bullet.Y - 1), color, ConsoleCharacter.Full);
-        }
-    }
-
-
-    public void PlaySound(string filePath)
+    private void RenderBullets(List<Point> bullets, int color)
     {
         try
         {
-            using (var audioFile = new AudioFileReader(filePath))
+            foreach (var bullet in bullets)
             {
-                using (var outputDevice = new WaveOutEvent())
-                {
-                    outputDevice.Init(audioFile);
-                    outputDevice.Play();
-                    Thread.Sleep(500);
-                    outputDevice.Stop();
-                }
+                engine.SetPixel(bullet, color, ConsoleCharacter.Full);
+                // Add only the necessary pixels to limit render load
+                engine.SetPixel(new Point(bullet.X+1, bullet.Y), color, ConsoleCharacter.Full);
             }
         }
-        catch (AccessViolationException) { }
-        catch (COMException) { }
-        catch (System.IO.FileNotFoundException) { }
-    }
-
-    private Point RotatePoint(Point point, Point center, float angle)
-    {
-        float cosAngle = (float)Math.Cos(angle * Math.PI / 180);
-        float sinAngle = (float)Math.Sin(angle * Math.PI / 180);
-        int x = (int)((point.X - center.X) * cosAngle - (point.Y - center.Y) * sinAngle + center.X);
-        int y = (int)((point.X - center.X) * sinAngle + (point.Y - center.Y) * cosAngle + center.Y);
-        return new Point(x, y);
+        catch (System.InvalidOperationException) { }
     }
 }
