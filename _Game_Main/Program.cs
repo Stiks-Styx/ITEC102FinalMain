@@ -6,10 +6,12 @@ namespace _Game_Main
     {
         private Player player;
         private EnemySpawner enemySpawner; // Add reference to enemy spawner
+        private MainMenu menu;
         private Timer timer;
 
         public int width = 400;
         public int height = 100;
+        public bool isPlaying = false;
 
         private static void Main(string[] args)
         {
@@ -29,6 +31,7 @@ namespace _Game_Main
 
             player = new Player(Engine, new Point(10, 10), false); // change the false to true if singleplayer
             enemySpawner = new EnemySpawner(Engine); // Instantiate the enemy spawner
+            menu = new MainMenu(Engine);
 
             // Set the enemy speed (1 step per frame by default, lower values for slower enemies)
             enemySpawner.SetEnemySpeed(.25f); // Slow speed (1 step per frame)
@@ -40,21 +43,27 @@ namespace _Game_Main
 
         private void UpdateScreen(object state)
         {
-            // Update the player and enemies
-            player.Update();
+            if (isPlaying == true)
+            {
+                // Update the player and enemies
+                player.Update();
 
-            enemySpawner.UpdateEnemies(player.playerOneBullets, player.playerTwoPosition);
+                enemySpawner.UpdateEnemies(player.playerOneBullets, player.playerTwoPosition);
 
-            
-            enemySpawner.UpdateEnemies(player.playerTwoBullets, player.playerOnePosition);
-            
 
-            // Ensure there are always 10 enemies on the screen
-            enemySpawner.EnsureEnemiesOnScreen(10);
+                enemySpawner.UpdateEnemies(player.playerTwoBullets, player.playerOnePosition);
 
-            // Render the player and enemies
-            player.Render();
-            enemySpawner.RenderEnemies();
+
+                // Ensure there are always 10 enemies on the screen
+                enemySpawner.EnsureEnemiesOnScreen(10);
+
+                // Render the player and enemies
+                player.Render();
+                enemySpawner.RenderEnemies();
+            }
+
+            menu.Render();
+            menu.Update();
         }
 
 
