@@ -8,6 +8,10 @@ public class EnemySpawner
     private float enemySpeed; // Control enemy speed (can now be fractional)
     private Random random;
 
+
+    private int width = 400;
+    private int height = 100;
+
     // Variable to accumulate movement for fractional speeds
     private float enemyMovementAccumulator = 0;
 
@@ -17,33 +21,44 @@ public class EnemySpawner
         enemies = new List<Point>();
         random = new Random();
         spawnSpeed = 5; // Adjust spawn rate if necessary
-        enemySpeed = 1.0f; // Default movement speed of enemies (can be fractional now)
+        enemySpeed = .5f; // Default movement speed of enemies (can be fractional now)
     }
 
     public void SpawnEnemy()
     {
         // Spawn an enemy at the right edge of the screen with a random Y position
-        Point enemy = new Point(Console.WindowWidth - 1, random.Next(5, 85)); // Random Y-position
-        enemies.Add(enemy);
+        Point enemy = new Point(width - 2, random.Next(5, 85)); // Random Y-position
+        try
+        {
+            enemies.Add(enemy);
+        }
+        catch (System.ArgumentOutOfRangeException) { }
     }
 
-    public void UpdateEnemies(List<Point> playerBullets)
+    public void UpdateEnemies(List<Point> playerBullets, Point playerHitbox)
     {
-        // Create a list to store the enemies and bullets that need to be removed
         List<int> enemiesToRemove = new List<int>();
         List<int> bulletsToRemove = new List<int>();
 
-        // First, check for collisions and mark enemies for removal
+        // Check for collisions between the player and enemies
         for (int i = 0; i < enemies.Count; i++)
         {
             Point enemy = enemies[i];
+
+            // If any segment of the player's hitbox overlaps with the enemy, mark the enemy for removal
+            if (enemy.X >= playerHitbox.X && enemy.X < playerHitbox.X + 5 && enemy.Y >= playerHitbox.Y && enemy.Y < playerHitbox.Y + 5)
+            {
+                enemiesToRemove.Add(i);
+                break; // Stop after the first collision
+            }
+
 
             // Check if the enemy is hit by any bullet
             for (int j = 0; j < playerBullets.Count; j++)
             {
                 Point bullet = playerBullets[j];
 
-                // Check for collision (bullet and enemy are at the same coordinates)
+                // Check for bullet collision (enemy and bullet at the same coordinates)
                 if (bullet.X >= enemy.X && bullet.X < enemy.X + 5 && bullet.Y >= enemy.Y && bullet.Y < enemy.Y + 5)
                 {
                     // Mark enemy for removal and bullet for removal
@@ -53,36 +68,29 @@ public class EnemySpawner
                 }
             }
 
-            // Accumulate fractional movement for the enemy
+            // Accumulate movement and move the enemy
             enemyMovementAccumulator += enemySpeed;
-
-            // Move the enemy left by 1 unit once the accumulator reaches 1
             if (enemyMovementAccumulator >= 1.0f)
             {
-                // Move the enemy left by 1 unit
                 Point newEnemyPosition = new Point(enemy.X - 1, enemy.Y);
-
-                // If the enemy moved off the left side of the screen, mark it for removal
                 if (newEnemyPosition.X < 0)
                 {
                     enemiesToRemove.Add(i);
                 }
                 else
                 {
-                    enemies[i] = newEnemyPosition; // Update position of the enemy
+                    enemies[i] = newEnemyPosition;
                 }
-
-                // Subtract the full unit from the accumulator
                 enemyMovementAccumulator -= 1.0f;
             }
         }
 
-        // Now, remove all marked enemies and bullets in one go after the iteration
+        // Remove all marked enemies and bullets after the iteration
         foreach (int index in enemiesToRemove.OrderByDescending(i => i))
         {
             try
             {
-                enemies.RemoveAt(index); // Remove enemies in reverse order to avoid index shifting
+                enemies.RemoveAt(index);
             }
             catch (System.ArgumentOutOfRangeException) { }
         }
@@ -91,7 +99,7 @@ public class EnemySpawner
         {
             try
             {
-                playerBullets.RemoveAt(index); // Remove bullets in reverse order to avoid index shifting
+                playerBullets.RemoveAt(index);
             }
             catch (System.ArgumentOutOfRangeException) { }
         }

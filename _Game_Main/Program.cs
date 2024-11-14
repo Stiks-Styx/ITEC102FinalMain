@@ -1,5 +1,4 @@
 ﻿using ConsoleGameEngine;
-using System;
 
 namespace _Game_Main
 {
@@ -9,18 +8,22 @@ namespace _Game_Main
         private EnemySpawner enemySpawner; // Add reference to enemy spawner
         private Timer timer;
 
+        public int width = 400;
+        public int height = 100;
+
         private static void Main(string[] args)
         {
-            int width = Console.WindowWidth;
-            int height = Console.WindowHeight;
-            new Program().Construct(200*3, 100, 1, 1, FramerateMode.Unlimited);
+            int width = 400;
+            int height = 100;
+
+            new Program().Construct(width, height, 1, 1, FramerateMode.Unlimited);
         }
 
         public override void Create()
         {
+            Console.SetBufferSize(width, height);
             Engine.SetPalette(Palettes.Pico8);
             Engine.Borderless();
-            Engine.Frame(new Point(1, 1), new Point(199, 99), 2);
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
 
@@ -40,22 +43,24 @@ namespace _Game_Main
             // Update the player and enemies
             player.Update();
 
-            // Pass the player bullets to the enemy spawner for collision detection
-            enemySpawner.UpdateEnemies(player.playerOneBullets); // Use playerOneBullets or playerTwoBullets
-            enemySpawner.UpdateEnemies(player.playerTwoBullets); // Use playerOneBullets or playerTwoBullets
+            enemySpawner.UpdateEnemies(player.playerOneBullets, player.playerTwoPosition);
+
+            
+            enemySpawner.UpdateEnemies(player.playerTwoBullets, player.playerOnePosition);
+            
 
             // Ensure there are always 10 enemies on the screen
-            enemySpawner.EnsureEnemiesOnScreen(5);
+            enemySpawner.EnsureEnemiesOnScreen(10);
 
             // Render the player and enemies
             player.Render();
-            enemySpawner.RenderEnemies(); // Render all enemies and their positions
+            enemySpawner.RenderEnemies();
         }
 
 
         public override void Render()
         {
-            // The rendering is handled within the UpdateScreen callback method
+
         }
 
         public override void Update()

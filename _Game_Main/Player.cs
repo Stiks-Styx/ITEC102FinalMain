@@ -1,49 +1,76 @@
 ﻿using ConsoleGameEngine;
-using NAudio.Wave;
-using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
+using SharpDX.DirectInput;
+using System;
+using System.Collections.Generic;
 
-class Player
+class Player : IDisposable
 {
+    private EnemySpawner enemySpawner;
+
     private readonly ConsoleEngine engine;
+    private DirectInput directInput;
+    private Keyboard keyboard;
+    private KeyboardState keyboardState;
+
+
+    private int borderColor = 1;
+
+    private int screenWidth = 400;
+    private int screenHeight = 100;
+
+    // // //
+    public int playerOneColor = 4;
+    public int playerTwoColor = 3;
+    // // //
+
     public Point playerOnePosition;
-    public Point playerTwoPosition;
-
     public List<Point> playerOneBullets = new List<Point>();
-    public int playerOneBulletColor = 10;
+    public int playerOneLife = 5; 
 
+    public Point playerTwoPosition;
     public List<Point> playerTwoBullets = new List<Point>();
-    public int playerTwoBulletColor = 20;
+    public int playerTwoLife = 5; 
 
-    private Point current;
-    private Point current1;
-    private Point current2;
+    public bool isOnePlayer;
+    public bool isTwoPlayer;
 
-    public Point[] playerOne = { 
-new Point(0,0),
-new Point(0,1),new Point(1,1),new Point(2,1),
-new Point(0,2),new Point(1,2),new Point(2,2),new Point(3,2),
-new Point(0,3),new Point(1,3),new Point(2,3),new Point(3,3),new Point(4,3),
-new Point(0,4),new Point(1,4),new Point(2,4),new Point(3,4),
-new Point(0,5),new Point(1,5),new Point(2,5),
-new Point(0,6)
-                                };
-    public Point[] playerTwo = { 
-new Point(0,0),
-new Point(0,1),new Point(1,1),
-new Point(0,2),new Point(1,2),new Point(2,2),
-new Point(0,3),new Point(1,3),new Point(2,3),new Point(3,3),
-new Point(0,4),new Point(1,4),new Point(2,4),
-new Point(0,5),new Point(1,5),
-new Point(0,6)
-                                };
+    public Point[] playerOne = {
+        new Point(0,0),
+        new Point(0,1), new Point(1,1), new Point(2,1),
+        new Point(0,2), new Point(1,2), new Point(2,2), new Point(3,2),
+        new Point(0,3), new Point(1,3), new Point(2,3), new Point(3,3), new Point(4,3),
+        new Point(0,4), new Point(1,4), new Point(2,4), new Point(3,4),
+        new Point(0,5), new Point(1,5), new Point(2,5),
+        new Point(0,6)
+    };
 
-    bool isOnePlayer;
-    bool isTwoPlayer;
+    public Point[] playerTwo = {
+        new Point(0,0),
+        new Point(0,1), new Point(1,1), new Point(2,1),
+        new Point(0,2), new Point(1,2), new Point(2,2), new Point(3,2),
+        new Point(0,3), new Point(1,3), new Point(2,3), new Point(3,3), new Point(4,3),
+        new Point(0,4), new Point(1,4), new Point(2,4), new Point(3,4),
+        new Point(0,5), new Point(1,5), new Point(2,5),
+        new Point(0,6)
+    };
+
+
+    private int attackCooldownFramesOne = 30;
+    private int attackTimeOne = 0;
+    private bool attackPressedOne = false;
+
+    private int attackCooldownFramesTwo = 30;
+    private int attackTimeTwo = 0;
+    private bool attackPressedTwo = false;
 
     public Player(ConsoleEngine engine, Point initialPosition, bool isSinglePlayer)
     {
         this.engine = engine;
+
+        directInput = new DirectInput();
+        keyboard = new Keyboard(directInput);
+        keyboard.Acquire();
+
         if (isSinglePlayer)
         {
             isOnePlayer = true;
@@ -54,73 +81,47 @@ new Point(0,6)
             isOnePlayer = true;
             isTwoPlayer = true;
             playerOnePosition = initialPosition;
-            playerTwoPosition = new Point(initialPosition.X + 10, initialPosition.Y); // offset for player two
+            playerTwoPosition = new Point(initialPosition.X + 10, initialPosition.Y); // Offset for player two
         }
-        current = new Point(0, 0);
-        current1 = new Point(5, 3);
-        current2 = new Point(0, 6);
     }
-
-    [DllImport("user32.dll")]
-    private static extern short GetAsyncKeyState(int vKey);
-
-    private const int VK_W = 0x57; // W key
-    private const int VK_S = 0x53; // S key
-    private const int VK_A = 0x41; // A key
-    private const int VK_D = 0x44; // D key
-    private const int VK_UP = 0x26; // Up Arrow
-    private const int VK_DOWN = 0x28; // Down Arrow
-    private const int VK_LEFT = 0x25; // Left Arrow
-    private const int VK_RIGHT = 0x27; // Right Arrow
-    private const int VK_RETURN = 0x0D; // Enter
-    private const int VK_SPACE = 0x20; // Space
-
-    private int attackCooldownFramesOne = 30;
-    private int attackTimeOne = 0;
-    private bool attackPressedOne = false;
-
-    private int attackCooldownFramesTwo = 30;
-    private int attackTimeTwo = 0;
-    private bool attackPressedTwo = false;
 
     public void Update()
     {
-        if (isOnePlayer)
+        keyboardState = keyboard.GetCurrentState();
+        if (keyboardState == null)
+            return;
+
+        // Player One Controls
+        if (keyboardState.IsPressed(Key.W) && playerOnePosition.Y > 1) playerOnePosition.Y--;
+        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 5) playerOnePosition.Y++; // Adjusted for player height
+        if (keyboardState.IsPressed(Key.A) && playerOnePosition.X > 1) playerOnePosition.X--;
+        if (keyboardState.IsPressed(Key.D) && playerOnePosition.X < screenWidth - 5) playerOnePosition.X++; // Adjusted for player width
+
+        // Player One Shooting
+        if (keyboardState.IsPressed(Key.Space) && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
         {
-            HandlePlayerMovement(ref playerOnePosition, VK_W, VK_S, VK_A, VK_D);
-
-            if ((GetAsyncKeyState(VK_SPACE) & 0x8000) != 0 && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
-            {
-                Point newBullet = new Point(playerOnePosition.X, playerOnePosition.Y + 3);
-                playerOneBullets.Add(newBullet);
-            }
-
-            UpdateBullets(playerOneBullets);
-            playerOnePosition = ConstrainPosition(playerOnePosition);
+            Point newBullet = new Point(playerOnePosition.X, playerOnePosition.Y + 3);
+            playerOneBullets.Add(newBullet);
         }
 
+        // Player Two Controls (if two players are enabled)
         if (isTwoPlayer)
         {
-            HandlePlayerMovement(ref playerTwoPosition, VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT);
-            if ((GetAsyncKeyState(VK_RETURN) & 0x8000) != 0 && CanAttack(ref attackTimeTwo, attackCooldownFramesTwo, ref attackPressedTwo))
+            if (keyboardState.IsPressed(Key.Up) && playerTwoPosition.Y > 1) playerTwoPosition.Y--;
+            if (keyboardState.IsPressed(Key.Down) && playerTwoPosition.Y < screenHeight - 7) playerTwoPosition.Y++;
+            if (keyboardState.IsPressed(Key.Left) && playerTwoPosition.X > 1) playerTwoPosition.X--;
+            if (keyboardState.IsPressed(Key.Right) && playerTwoPosition.X < screenWidth - 7) playerTwoPosition.X++;
+
+            // Player Two Shooting
+            if (keyboardState.IsPressed(Key.RightControl) && CanAttack(ref attackTimeTwo, attackCooldownFramesTwo, ref attackPressedTwo))
             {
                 Point newBullet = new Point(playerTwoPosition.X, playerTwoPosition.Y + 3);
                 playerTwoBullets.Add(newBullet);
             }
-
-            UpdateBullets(playerTwoBullets);
-            playerTwoPosition = ConstrainPosition(playerTwoPosition);
         }
 
-    }
-
-    private void HandlePlayerMovement(ref Point position, int upKey, int downKey, int leftKey, int rightKey)
-    {
-        if ((GetAsyncKeyState(upKey) & 0x8000) != 0) position.Y--;
-        if ((GetAsyncKeyState(downKey) & 0x8000) != 0) position.Y++;
-        if ((GetAsyncKeyState(leftKey) & 0x8000) != 0) position.X--;
-        if ((GetAsyncKeyState(rightKey) & 0x8000) != 0) position.X++;
-        position = ConstrainPosition(position);
+        UpdateBullets(playerOneBullets);
+        UpdateBullets(playerTwoBullets);
     }
 
     private bool CanAttack(ref int attackTime, int cooldownFrames, ref bool attackPressed)
@@ -140,8 +141,7 @@ new Point(0,6)
     {
         for (int i = bullets.Count - 1; i >= 0; i--)
         {
-            // Move bullet upward by 1 step (or as per your logic)
-            Point newBullet = new Point(bullets[i].X+1, bullets[i].Y);
+            Point newBullet = new Point(bullets[i].X + 1, bullets[i].Y);
 
             // Check if the bullet is still within the screen bounds
             if (newBullet.Y >= 0)
@@ -155,57 +155,62 @@ new Point(0,6)
         }
     }
 
-
-
-
-    private Point ConstrainPosition(Point position)
-    {
-        position.X = Math.Max(0, Math.Min(position.X, Console.WindowWidth - 1));
-        position.Y = Math.Max(0, Math.Min(position.Y, Console.WindowHeight - 1));
-        return position;
-    }
-
     public void Render()
     {
         engine.ClearBuffer();
-
-        if (isOnePlayer)
-        {
-            engine.WriteText(new Point(40, 0), playerOnePosition.ToString(), 1);
-            RenderPlayer(playerOne, playerOnePosition, 4);
-            RenderBullets(playerOneBullets, playerOneBulletColor);
-        }
-
-        if (isTwoPlayer)
-        {
-            engine.WriteText(new Point(40, 1), playerTwoPosition.ToString(), 1);
-            RenderPlayer(playerTwo, playerTwoPosition, 2);
-            RenderBullets(playerTwoBullets, playerTwoBulletColor);
-        }
-
+        RenderBorder();
+        RenderPlayer(playerOne, playerOnePosition, playerOneColor); // for Player One
+        RenderPlayer(playerTwo, playerTwoPosition, playerTwoColor); // for Player Two
+        RenderBullets(playerOneBullets, playerOneColor); // for Player One Bullets
+        RenderBullets(playerTwoBullets, playerTwoColor); // for Player Two Bullets
         engine.DisplayBuffer();
     }
 
-    private void RenderPlayer(Point[] player, Point position, int color)
+    public void RenderPlayer(Point[] player, Point position, int color)
     {
+        List<Point> playerHitbox = new List<Point>();
+
+        // Add the player's segments to the hitbox
         foreach (var item in player)
         {
             Point playerHitBox = new Point(item.X + position.X, item.Y + position.Y);
-            engine.SetPixel(playerHitBox, color, ConsoleCharacter.Full);
+            playerHitbox.Add(playerHitBox); // Add each calculated segment to the hitbox list
+            engine.SetPixel(playerHitBox, color, ConsoleCharacter.Full); // Render the segment on the screen
         }
     }
 
+
+
     private void RenderBullets(List<Point> bullets, int color)
     {
-        try
+        foreach (var bullet in bullets)
         {
-            foreach (var bullet in bullets)
-            {
-                engine.SetPixel(bullet, color, ConsoleCharacter.Full);
-                // Add only the necessary pixels to limit render load
-                engine.SetPixel(new Point(bullet.X+1, bullet.Y), color, ConsoleCharacter.Full);
-            }
+            engine.SetPixel(bullet, color, ConsoleCharacter.Full);
         }
-        catch (System.InvalidOperationException) { }
+    }
+
+    private void RenderBorder()
+    {
+
+        // Render top and bottom borders
+        for (int x = 0; x < screenWidth; x++)
+        {
+            engine.SetPixel(new Point(x, 0), borderColor, ConsoleCharacter.Full);           // Top border
+            engine.SetPixel(new Point(x, screenHeight - 1), borderColor, ConsoleCharacter.Full);   // Bottom border
+        }
+
+        // Render left and right borders
+        for (int y = 0; y < screenHeight; y++)
+        {
+            engine.SetPixel(new Point(0, y), borderColor, ConsoleCharacter.Full);            // Left border
+            engine.SetPixel(new Point(screenWidth - 1, y), borderColor, ConsoleCharacter.Full);    // Right border
+        }
+    }
+
+    public void Dispose()
+    {
+        keyboard.Unacquire();
+        keyboard.Dispose();
+        directInput.Dispose();
     }
 }
