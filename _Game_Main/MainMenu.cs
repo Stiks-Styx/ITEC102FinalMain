@@ -16,7 +16,7 @@ class MainMenu
     private string player1Name = "";
     private string player2Name = "";
 
-    private string page = "MainMenu";
+    private string currentPage = "MainMenu";
 
     private int screenWidth = 400;
     private int screenHeight = 100;
@@ -26,9 +26,15 @@ class MainMenu
 
     private int typeCooldown = 8;
     private int typeTime = 0;
-    
+
+    private int enterCooldown = 8; 
+    private int enterTime = 0;      
+
     private int delCooldown = 8;
     private int delTime = 0;
+
+    private bool inputName1 = false;
+    private bool inputName2 = false;
 
     public bool isSinglePlayer = true;
 
@@ -47,85 +53,43 @@ class MainMenu
 
     public void Render()
     {
-        font = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\3d.flf");
-        font1 = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\smslant.flf");
+        LoadFonts();
 
         engine.ClearBuffer();
 
         RenderBorder();
+        GameTitle();
 
-        engine.WriteFiglet(new Point(140, 10), "VOID  INVADER", font, 2);
-        switch (page)
+        switch (currentPage)
         {
             case "MainMenu":
-                engine.WriteFiglet(new Point(170, 25), "1-Player", font1, 2);
-                engine.WriteFiglet(new Point(170, 30), "2-Player", font1, 2);
-                engine.WriteFiglet(new Point(170, 35), " Scores", font1, 2);
-                engine.WriteFiglet(new Point(170, 40), "  Exit", font1, 2);
+                RenderMainMenu();
+                RenderSelector();
                 break;
             case "1Player":
-                engine.WriteFiglet(new Point(85, 25), "Enter your name: ", font1, 2);
-                engine.WriteFiglet(new Point(180, 25), player1Name, font1, 2);
-                if (engine.GetKey(ConsoleKey.Enter) && player1Name != "")
-                {
-
-                }
+                Render1PlayerMenu();
+                if (!inputName1) RenderSelector();
                 break;
             case "2Player":
-                engine.WriteFiglet(new Point(170, 25), "Byeeeeee", font1, 2);
+                Render2PlayerMenu();
+                if (!inputName1 && !inputName2) RenderSelector();
                 break;
             case "Scores":
-                engine.WriteFiglet(new Point(170, 25), "Wooooorld", font1, 2);
+                // Additional rendering for other pages can go here
                 break;
         }
 
-        if (page == "MainMenu")
-        {
-            foreach (var item in selector)
-            {
-                engine.SetPixel(new Point(item.X + selectorPosition.X, item.Y + selectorPosition.Y), 2, ConsoleCharacter.Full);
-            }
-        }
-
+        RenderDebugInfo();
         engine.DisplayBuffer();
     }
 
-    public void Update()
+    // Methods for Rendering Stuff
+    private void LoadFonts()
     {
-        keyboardState = keyboard.GetCurrentState();
-        if (page == "MainMenu")
-        {
-            if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y >= 30 && CanType(ref moveTime, moveCooldown))
-            {
-                selectorPosition.Y -= 5;
-            }
-            else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y <= 35 && CanType(ref moveTime, moveCooldown))
-            {
-                selectorPosition.Y += 5;
-            }
-        }
-
-        // Check if the "1-Player" option is selected and ask for the name
-        if (selectorPosition.Y == 25 && engine.GetKey(ConsoleKey.Enter))
-        {
-            page = "1Player";  // Set the page to 1Player for capturing name
-        }
-
-        HandleKeyboardInput();
+        font = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\3d.flf");
+        font1 = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\smslant.flf");
     }
-
-    private bool CanType(ref int moveTime, int moveCooldown)
-    {
-        if (moveTime == 0)
-        {
-            moveTime = moveCooldown;
-            return true;
-        }
-        if (moveTime > 0) moveTime--;
-        return false;
-    }
-
-    private void RenderBorder()
+    private void RenderBorder ()
     {
         for (int x = 0; x < screenWidth; x++)
         {
@@ -140,10 +104,164 @@ class MainMenu
             engine.SetPixel(new Point(screenWidth - 1, y), borderColor, ConsoleCharacter.Full);
         }
     }
+    private void RenderSelector()
+    {
+        foreach (var item in selector)
+        {
+            engine.SetPixel(new Point(item.X + selectorPosition.X, item.Y + selectorPosition.Y), 2, ConsoleCharacter.Full);
+        }
+    }
+    // Render Game Title
+    private void GameTitle()
+    {
+        engine.WriteFiglet(new Point(140, 10), "VOID  INVADER", font, 2);
+    }
+
+    private void RenderMainMenu()
+    {
+        string[] menuOptions = { "1-Player", "2-Player", "Scores", "Exit" };
+        for (int i = 0; i < menuOptions.Length; i++)
+        {
+            engine.WriteFiglet(new Point(170, 25 + (i * 5)), menuOptions[i], font1, 2);
+        }
+    }
+    // Render 1-Player Menu
+    private void Render1PlayerMenu()
+    {
+        engine.WriteFiglet(new Point(85, 25), "Enter your name:", font1, 2);
+        engine.WriteFiglet(new Point(180, 25), player1Name, font1, 2);
+        engine.WriteFiglet(new Point(170, 30), "Survival", font1, 2);
+        engine.WriteFiglet(new Point(170, 35), "Back", font1, 2);
+        if (engine.GetKey(ConsoleKey.Enter) && player1Name != "" && enterTime == 0)
+        {
+            enterTime = enterCooldown;
+            inputName1 = false;
+        }
+    }
+    // Render 2-Player Menu
+    private void Render2PlayerMenu()
+    {
+        // nothing to see here
+    }
+    // Render Scores
+    private void RenderScores()
+    {
+
+    }
+
+    private void RenderDebugInfo()
+    {
+        string debugInfo = $"Page: {currentPage}, Selector Position: {selectorPosition.X}, {selectorPosition.Y}";
+        engine.WriteText(new Point(10, 10), debugInfo, 2);
+    }
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+    public void Update()
+    {
+        keyboardState = keyboard.GetCurrentState();
+
+        // Reduce the cooldown timer for Enter key
+        if (enterTime > 0) enterTime--;
+
+        switch (currentPage)
+        {
+            case "MainMenu":
+                HandleMainMenuInput();
+                break;
+            case "1Player":
+                Handle1PlayerMenuInput();
+                break;
+        }
+
+        HandleKeyboardInput();
+    }
+    // Methods for Update
+    private void HandleMainMenuInput()
+    {
+        if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y > 25 && CanType(ref moveTime, moveCooldown))
+        {
+            selectorPosition.Y -= 5;
+        }
+        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 40 && CanType(ref moveTime, moveCooldown))
+        {
+            selectorPosition.Y += 5;
+        }
+
+        if (engine.GetKey(ConsoleKey.Enter) && enterTime == 0)
+        {
+            enterTime = enterCooldown;
+            switch (selectorPosition.Y)
+            {
+                case 25: currentPage = "1Player"; inputName1 = true; break;
+                case 30: currentPage = "2Player"; inputName1 = inputName2 = true; break;
+                case 35: currentPage = "Scores"; break;
+                case 40: ExitGame(); break;
+            }
+        }
+    }
+
+    private void Handle1PlayerMenuInput()
+    {
+        if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y > 30 && CanType(ref moveTime, moveCooldown))
+        {
+            selectorPosition.Y -= 5;
+        }
+        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 35 && CanType(ref moveTime, moveCooldown))
+        {
+            selectorPosition.Y += 5;
+        }
+
+        if (engine.GetKey(ConsoleKey.Enter) && enterTime == 0)
+        {
+            enterTime = enterCooldown;
+            if (selectorPosition.Y == 30)
+            {
+                currentPage = "Survival";
+            }
+            else if (selectorPosition.Y == 35)
+            {
+                ResetToMainMenu();
+            }
+        }
+    }
+
+    private void Handle2PlayerMenuInput() 
+    {
+
+    }
+
+    private bool CanType(ref int moveTime, int moveCooldown)
+    {
+        if (moveTime == 0)
+        {
+            moveTime = moveCooldown;
+            return true;
+        }
+        if (moveTime > 0) moveTime--;
+        return false;
+    }
+
+    private void ResetToMainMenu()
+    {
+        currentPage = "MainMenu";
+        selectorPosition = new Point(165, 25);
+        player1Name = "";
+        inputName1 = false;
+    }
+
+    private void ExitGame()
+    {
+        keyboard.Unacquire();
+        directInput.Dispose();
+        Environment.Exit(0);
+    }
 
     // Handle keyboard input to type the player's name
     private void HandleKeyboardInput()
     {
+
+        if (!inputName1 || (!inputName1 && inputName2)) return;
+
         if (keyboardState.IsPressed(Key.Back) && CanType(ref delTime, delCooldown))
         {
             try
@@ -158,10 +276,8 @@ class MainMenu
         {
             if (keyboardState.IsPressed((Key)i) && CanType(ref typeTime, typeCooldown))
             {
-                // Convert the key to a char and append it to the player1Name
-                // You can customize the character mapping for different keys here
                 char keyChar = GetCharacterFromKey((Key)i);
-                if (keyChar != '\0' && player1Name.Length < 10) // Limit name length to 20 characters
+                if (keyChar != '\0' && player1Name.Length < 10)
                 {
                     player1Name += keyChar;
                 }

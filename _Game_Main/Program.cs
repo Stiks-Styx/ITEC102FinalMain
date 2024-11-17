@@ -28,10 +28,9 @@ namespace _Game_Main
             Engine.Borderless();
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
-
+            menu = new MainMenu(Engine);
             player = new Player(Engine, new Point(10, 10), menu.isSinglePlayer); // change the false to true if singleplayer
             enemySpawner = new EnemySpawner(Engine); // Instantiate the enemy spawner
-            menu = new MainMenu(Engine);
 
             // Set the enemy speed (1 step per frame by default, lower values for slower enemies)
             enemySpawner.SetEnemySpeed(.25f); // Slow speed (1 step per frame)
