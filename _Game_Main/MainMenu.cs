@@ -16,7 +16,7 @@ class MainMenu
     private string player1Name = "";
     private string player2Name = "";
 
-    private string page = "1Player";
+    private string page = "MainMenu";
 
     private int screenWidth = 400;
     private int screenHeight = 100;
@@ -29,6 +29,8 @@ class MainMenu
     
     private int delCooldown = 8;
     private int delTime = 0;
+
+    public bool isSinglePlayer = true;
 
     private DirectInput directInput;
     private Keyboard keyboard;
@@ -75,7 +77,6 @@ class MainMenu
             case "Scores":
                 engine.WriteFiglet(new Point(170, 25), "Wooooorld", font1, 2);
                 break;
-
         }
 
         if (page == "MainMenu")
@@ -94,11 +95,11 @@ class MainMenu
         keyboardState = keyboard.GetCurrentState();
         if (page == "MainMenu")
         {
-            if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y >= 30 && CanMove(ref moveTime, moveCooldown))
+            if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y >= 30 && CanType(ref moveTime, moveCooldown))
             {
                 selectorPosition.Y -= 5;
             }
-            else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y <= 35 && CanMove(ref moveTime, moveCooldown))
+            else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y <= 35 && CanType(ref moveTime, moveCooldown))
             {
                 selectorPosition.Y += 5;
             }
@@ -113,7 +114,7 @@ class MainMenu
         HandleKeyboardInput();
     }
 
-    private bool CanMove(ref int moveTime, int moveCooldown)
+    private bool CanType(ref int moveTime, int moveCooldown)
     {
         if (moveTime == 0)
         {
@@ -143,7 +144,7 @@ class MainMenu
     // Handle keyboard input to type the player's name
     private void HandleKeyboardInput()
     {
-        if (keyboardState.IsPressed(Key.Back) && CanMove(ref delTime, delCooldown))
+        if (keyboardState.IsPressed(Key.Back) && CanType(ref delTime, delCooldown))
         {
             try
             {
@@ -155,12 +156,12 @@ class MainMenu
         // Iterate over all keys to see if they are pressed
         for (int i = 0; i < 256; i++)
         {
-            if (keyboardState.IsPressed((Key)i) && CanMove(ref typeTime, typeCooldown))
+            if (keyboardState.IsPressed((Key)i) && CanType(ref typeTime, typeCooldown))
             {
                 // Convert the key to a char and append it to the player1Name
                 // You can customize the character mapping for different keys here
                 char keyChar = GetCharacterFromKey((Key)i);
-                if (keyChar != '\0' && player1Name.Length < 20) // Limit name length to 20 characters
+                if (keyChar != '\0' && player1Name.Length < 10) // Limit name length to 20 characters
                 {
                     player1Name += keyChar;
                 }

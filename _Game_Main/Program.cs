@@ -29,7 +29,7 @@ namespace _Game_Main
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
 
-            player = new Player(Engine, new Point(10, 10), false); // change the false to true if singleplayer
+            player = new Player(Engine, new Point(10, 10), menu.isSinglePlayer); // change the false to true if singleplayer
             enemySpawner = new EnemySpawner(Engine); // Instantiate the enemy spawner
             menu = new MainMenu(Engine);
 

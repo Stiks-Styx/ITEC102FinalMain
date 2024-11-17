@@ -6,15 +6,12 @@ using System.Collections.Generic;
 class Player : IDisposable
 {
     private EnemySpawner enemySpawner;
-
     private readonly ConsoleEngine engine;
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
 
-
     private int borderColor = 1;
-
     private int screenWidth = 400;
     private int screenHeight = 100;
 
