@@ -2,8 +2,13 @@
 using System.Runtime.InteropServices;
 using NAudio.Wave;
 
+<<<<<<< Updated upstream
 class Player
 {
+=======
+class Player : IDisposable
+{ 
+>>>>>>> Stashed changes
     private readonly ConsoleEngine engine;
 
     public Point playerOnePosition;
@@ -209,6 +214,7 @@ class Player
 
     public void Render()
     {
+<<<<<<< Updated upstream
         engine.ClearBuffer();
         if (isOnePlayer == true)
         {
@@ -288,6 +294,13 @@ class Player
         engine.WriteText(new Point(40, 11), bullet1, 1);
         engine.WriteText(new Point(40, 12), bullet2, 1);
         engine.DisplayBuffer();
+=======
+        RenderBorder();
+        RenderPlayer(playerOne, playerOnePosition, playerOneColor); // for Player One
+        RenderPlayer(playerTwo, playerTwoPosition, playerTwoColor); // for Player Two
+        RenderBullets(playerOneBullets, playerOneColor); // for Player One Bullets
+        RenderBullets(playerTwoBullets, playerTwoColor); // for Player Two Bullets
+>>>>>>> Stashed changes
     }
 
     private Point RotatePoint(Point point, Point center, float angle)
@@ -305,6 +318,7 @@ class Player
     {
         try
         {
+<<<<<<< Updated upstream
             string mp3FilePath = "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\pew-pew-two-102442.mp3";
             using (var audioFile = new AudioFileReader(mp3FilePath))
             {
@@ -324,6 +338,19 @@ class Player
         catch (System.Runtime.InteropServices.COMException) 
         { 
 
+=======
+            foreach (var bullet in bullets)
+            {
+                engine.SetPixel(bullet, color, ConsoleCharacter.Full);
+            }
+        }
+        catch (System.InvalidOperationException) 
+        {
+            foreach (var bullet in bullets)
+            {
+                engine.SetPixel(bullet, color, ConsoleCharacter.Full);
+            }
+>>>>>>> Stashed changes
         }
     }
     public void PlayTwoSound()

@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("_Game_Main")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< Updated upstream
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6128f8bb482a860771923a921a539ffa711800b")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d9ac734d53a6e6afd41c3bf36c59758095f27ad0")]
+>>>>>>> Stashed changes
 [assembly: System.Reflection.AssemblyProductAttribute("_Game_Main")]
 [assembly: System.Reflection.AssemblyTitleAttribute("_Game_Main")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
