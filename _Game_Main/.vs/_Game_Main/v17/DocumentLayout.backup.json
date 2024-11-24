@@ -3,19 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-<<<<<<< Updated upstream
-=======
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
->>>>>>> Stashed changes
     },
     {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,56 +22,44 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeToolTip": "Player.cs",
-<<<<<<< Updated upstream
-              "ViewState": "AgIAAP8AAAAAAAAAAAAiwCABAAApAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwA0AAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T02:24:24.706Z",
-=======
-              "ViewState": "AgIAAEAAAAAAAAAAAAAgwAYAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-17T09:58:45.945Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-17T09:58:45.945Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MainMenu.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\MainMenu.cs",
               "RelativeDocumentMoniker": "MainMenu.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\MainMenu.cs",
               "RelativeToolTip": "MainMenu.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAwwLEAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-14T07:55:14.239Z",
->>>>>>> Stashed changes
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeToolTip": "Program.cs",
-<<<<<<< Updated upstream
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA1AAAAAAAAAA==",
-=======
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAADYAAAAjAAAAAAAAAA==",
->>>>>>> Stashed changes
+              "ViewState": "AgIAABQAAAAAAAAAAAAcwB8AAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T04:49:57.127Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-29T04:49:57.127Z"
             }
           ]
         }
