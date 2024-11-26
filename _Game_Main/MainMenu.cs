@@ -1,25 +1,28 @@
-﻿using ConsoleGameEngine;
+﻿using _Game_Main;
+using ConsoleGameEngine;
 using SharpDX.DirectInput;
 
 class MainMenu
 {
     private readonly ConsoleEngine engine;
-    private static FigletFont font;
-    private static FigletFont font1;
+    public static FigletFont font;
+    public static FigletFont font1;
+    private readonly Program program;
 
     private Point[] selector = {new Point(0, 1), new Point(0, 2), new Point(0, 3), new Point(0, 4),
                                 new Point(56, 1), new Point(56, 2), new Point(56, 3), new Point(56, 4)};
-    private Point selectorPosition = new Point(165, 25);
+    public Point selectorPosition = new Point(165, 25);
 
     private int borderColor = 1;
 
-    private string player1Name = "";
-    private string player2Name = "";
+    public string player1Name = "";
 
-    private string currentPage = "MainMenu";
+    public string currentPage = "MainMenu";
 
-    private int screenWidth = 400;
-    private int screenHeight = 100;
+    private readonly int screenWidth;
+    private readonly int screenHeight;
+
+    private readonly bool isPlaying;
 
     private int moveCooldown = 10;
     private int moveTime = 0;
@@ -34,17 +37,17 @@ class MainMenu
     private int delTime = 0;
 
     private bool inputName1 = false;
-    private bool inputName2 = false;
-
-    public bool isSinglePlayer = true;
 
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
 
-    public MainMenu(ConsoleEngine engine)
+    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight,bool isPlaying, Program program)
     {
         this.engine = engine;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.program = program;
 
         directInput = new DirectInput();
         keyboard = new Keyboard(directInput);
@@ -70,15 +73,11 @@ class MainMenu
                 Render1PlayerMenu();
                 if (!inputName1) RenderSelector();
                 break;
-            case "2Player":
-                Render2PlayerMenu();
-                if (!inputName1 && !inputName2) RenderSelector();
-                break;
             case "Scores":
                 // Additional rendering for other pages can go here
                 break;
             case "Survival":
-                RenderSurvival();
+                program.isPlaying = true;
                 break;
         }
 
@@ -92,7 +91,7 @@ class MainMenu
         font = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\3d.flf");
         font1 = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\smslant.flf");
     }
-    private void RenderBorder ()
+    public void RenderBorder ()
     {
         for (int x = 0; x < screenWidth; x++)
         {
@@ -106,6 +105,11 @@ class MainMenu
             engine.SetPixel(new Point(0, y), borderColor, ConsoleCharacter.Full);
             engine.SetPixel(new Point(screenWidth - 1, y), borderColor, ConsoleCharacter.Full);
         }
+
+        for (int z = 0; z < screenHeight; z++)
+        {
+            engine.SetPixel(new Point(screenWidth-60, screenHeight-z), borderColor, ConsoleCharacter.Full);
+        }
     }
     private void RenderSelector()
     {
@@ -117,34 +121,64 @@ class MainMenu
     // Render Game Title
     private void GameTitle()
     {
-        engine.WriteFiglet(new Point(140, 10), "VOID  INVADER", font, 2);
+        string title = "VOID  INVADER";
+
+        // Estimate the width of the title (assuming each character takes 5 pixels, adjust as needed)
+        int estimatedWidth = title.Length * 8;
+
+        // Calculate the starting X position for centering the title
+        int startX = (screenWidth - 60 - estimatedWidth) / 2;
+
+        // Render the title at the calculated position
+        engine.WriteFiglet(new Point(startX, 10), title, font, 2);
     }
 
     private void RenderMainMenu()
     {
-        string[] menuOptions = { "1-Player", "2-Player", "Scores", "Exit" };
+        string[] menuOptions = { "1-Player", "Scores", "Exit" };
+
+        // Iterate through menu options and calculate centered positions
         for (int i = 0; i < menuOptions.Length; i++)
         {
-            engine.WriteFiglet(new Point(170, 25 + (i * 5)), menuOptions[i], font1, 2);
+            // Estimate the width of the text (assuming each character takes up 5 pixels)
+            int estimatedWidth = menuOptions[i].Length * 5;
+
+            // Calculate the starting X position for centering the text
+            int startX = (screenWidth - 60 - estimatedWidth) / 2;
+
+            // Write the Figlet text at the calculated position
+            engine.WriteFiglet(new Point(startX, 25 + (i * 5)), menuOptions[i], font1, 2);
         }
     }
     // Render 1-Player Menu
     private void Render1PlayerMenu()
     {
-        engine.WriteFiglet(new Point(85, 25), "Enter your name:", font1, 2);
-        engine.WriteFiglet(new Point(180, 25), player1Name, font1, 2);
-        engine.WriteFiglet(new Point(170, 30), "Survival", font1, 2);
-        engine.WriteFiglet(new Point(170, 35), "Back", font1, 2);
+        int num = 6;
+        // Center the "Enter your name:" text
+        int enterTextWidth = "Enter your name:".Length * num; // Adjust multiplier as necessary
+        int startXEnter = (screenWidth - 60 - enterTextWidth) / 2;
+        engine.WriteFiglet(new Point(startXEnter, 20), "Enter your name:", font1, 2);
+
+        // Center the player1Name text
+        int playerNameWidth = player1Name.Length * num; // Adjust multiplier as necessary
+        int startXName = (screenWidth - 60 - playerNameWidth) / 2;
+        engine.WriteFiglet(new Point(startXName, 25), player1Name, font1, 2);
+
+        // Center the "Survival" text
+        int survivalTextWidth = "Survival".Length * num; // Adjust multiplier as necessary
+        int startXSurvival = (screenWidth - 60 - survivalTextWidth) / 2;
+        engine.WriteFiglet(new Point(startXSurvival, 30), "Survival", font1, 2);
+
+        // Center the "Back" text
+        int backTextWidth = "Back".Length * num; // Adjust multiplier as necessary
+        int startXBack = (screenWidth - 60 - backTextWidth) / 2;
+        engine.WriteFiglet(new Point(startXBack, 35), "Back", font1, 2);
+
         if (engine.GetKey(ConsoleKey.Enter) && player1Name != "" && enterTime == 0)
         {
             enterTime = enterCooldown;
             inputName1 = false;
         }
-    }
-    // Render 2-Player Menu
-    private void Render2PlayerMenu()
-    {
-        // nothing to see here
     }
 
     private void RenderSurvival()
@@ -161,7 +195,7 @@ class MainMenu
     private void RenderDebugInfo()
     {
         string debugInfo = $"Page: {currentPage}, Selector Position: {selectorPosition.X}, {selectorPosition.Y}";
-        engine.WriteText(new Point(10, 10), debugInfo, 2);
+        engine.WriteFiglet(new Point(10, screenHeight-5), debugInfo, font1,2);
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
@@ -202,7 +236,6 @@ class MainMenu
             switch (selectorPosition.Y)
             {
                 case 25: currentPage = "1Player"; inputName1 = true; break;
-                case 30: currentPage = "2Player"; inputName1 = inputName2 = true; break;
                 case 35: currentPage = "Scores"; break;
                 case 40: ExitGame(); break;
             }
@@ -211,6 +244,7 @@ class MainMenu
 
     private void Handle1PlayerMenuInput()
     {
+        if (inputName1) return;
         if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y > 30 && CanType(ref moveTime, moveCooldown))
         {
             selectorPosition.Y -= 5;
@@ -232,11 +266,6 @@ class MainMenu
                 ResetToMainMenu();
             }
         }
-    }
-
-    private void Handle2PlayerMenuInput() 
-    {
-
     }
 
     private bool CanType(ref int moveTime, int moveCooldown)
@@ -269,7 +298,7 @@ class MainMenu
     private void HandleKeyboardInput()
     {
 
-        if (!inputName1 || (!inputName1 && inputName2)) return;
+        if (!inputName1 ) return;
 
         if (keyboardState.IsPressed(Key.Back) && CanType(ref delTime, delCooldown))
         {

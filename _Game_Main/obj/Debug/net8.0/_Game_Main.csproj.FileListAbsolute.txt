@@ -33,3 +33,4 @@ C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\NAudio.Wasapi
 C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\NAudio.WinMM.dll
 C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\SharpDX.dll
 C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\SharpDX.DirectInput.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\WindowsInput.dll

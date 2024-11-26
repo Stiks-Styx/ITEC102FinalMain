@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\debughelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:debughelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -22,44 +26,59 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "DebugHelper.cs",
+              "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\DebugHelper.cs",
+              "RelativeDocumentMoniker": "DebugHelper.cs",
+              "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\DebugHelper.cs",
+              "RelativeToolTip": "DebugHelper.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAUwDkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-26T00:21:09.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MainMenu.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\MainMenu.cs",
               "RelativeDocumentMoniker": "MainMenu.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\MainMenu.cs",
               "RelativeToolTip": "MainMenu.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAowFsAAABnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-24T15:52:36.92Z"
+              "WhenOpened": "2024-11-24T15:52:36.92Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeToolTip": "Player.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAmwHwAAABSAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-30T02:24:24.706Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACsAAAAAAAAAAAAcwDUAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T04:49:57.127Z"
+              "WhenOpened": "2024-10-29T04:49:57.127Z",
+              "EditorCaption": ""
             }
           ]
         }
