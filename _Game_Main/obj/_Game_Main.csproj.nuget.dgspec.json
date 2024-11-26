@@ -50,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "InputSimulator": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            },
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",
               "version": "[3.8.2.1105, )"
@@ -61,6 +65,10 @@
             "NAudio": {
               "target": "Package",
               "version": "[2.2.1, )"
+            },
+            "SharpDX.DirectInput": {
+              "target": "Package",
+              "version": "[4.2.0, )"
             }
           },
           "imports": [

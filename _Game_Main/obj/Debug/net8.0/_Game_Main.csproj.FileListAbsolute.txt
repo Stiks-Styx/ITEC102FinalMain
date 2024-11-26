@@ -31,3 +31,6 @@ C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\NAudio.Core.d
 C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\NAudio.Midi.dll
 C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\NAudio.Wasapi.dll
 C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\NAudio.WinMM.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\SharpDX.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\SharpDX.DirectInput.dll
+C:\Users\Styx\Desktop\ITEC102FinalMain\_Game_Main\bin\Debug\net8.0\WindowsInput.dll
