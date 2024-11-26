@@ -1,4 +1,5 @@
 ﻿using ConsoleGameEngine;
+using System.Xml.Linq;
 using WindowsInput;
 using WindowsInput.Native;
 
@@ -30,8 +31,8 @@ namespace _Game_Main
             TargetFramerate = 60;
 
             // Initialize MainMenu and DebugHelper
-            menu = new MainMenu(Engine, Width, Height, isPlaying, this);
-            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, menu);
+            menu = new MainMenu(Engine, Width, Height, isPlaying, this, player);
+            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, menu, this);
 
             // Set up DebugHelper with dependencies
             debugHelper = new DebugHelper(Engine, MainMenu.font1, Height, menu.player1Name);
@@ -51,7 +52,7 @@ namespace _Game_Main
                 // Render the player and enemies
                 player.Render();
 
-                debugHelper.GameDebugInfo(menu.player1Name, null);
+                //debugHelper.GameDebugInfo(menu.player1Name, null);
             }
             else
             {
@@ -60,7 +61,7 @@ namespace _Game_Main
                 menu.Update();
 
                 // Render debug info
-                debugHelper.MenuDebugInfo(menu.currentPage, menu.selectorPosition);
+                //debugHelper.MenuDebugInfo(menu.currentPage, menu.selectorPosition);
             }
         }
 
@@ -83,8 +84,74 @@ namespace _Game_Main
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.OEM_MINUS);
                 System.Threading.Thread.Sleep(100); // Optional: Add a small delay between key presses
             }
+        }
 
-            Console.WriteLine("Simulated Ctrl + - 4 times!");
+        public void RecordScore()
+        {
+            XDocument document;
+            string filePath = "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml";
+
+            XElement scoreElement = new XElement("score",
+                new XAttribute("player", menu.player1Name),
+                new XAttribute("value", player.score));
+
+            if (!File.Exists(filePath))
+            {
+                document = new XDocument(
+                    new XDeclaration("1.0", "UTF-8", "yes"),
+                    new XElement("scores"));
+                document.Save(filePath);
+            }
+
+            document = XDocument.Load(filePath);
+
+            XElement scoresElement = document.Root.Element("scores");
+
+            if (scoresElement == null)
+            {
+                scoresElement = new XElement("scores");
+                document.Root.Add(scoresElement);
+            }
+
+            scoresElement.Add(scoreElement);
+
+            // Sort the scores in descending order by value
+            var sortedScores = scoresElement.Elements("score")
+                .OrderByDescending(score => (int)score.Attribute("value"))
+                .ToList();
+
+            // Clear the existing scores
+            scoresElement.RemoveAll();
+
+            // Add the sorted scores back to the "scores" element
+            foreach (var score in sortedScores)
+            {
+                scoresElement.Add(score);
+            }
+
+            document.Save(filePath);
+        }
+
+        public void ReadScore(string filePath)
+        {
+            // Load the XML document
+            XDocument xdoc = XDocument.Load(filePath);
+
+            // Query the scores
+            var scores = from score in xdoc.Descendants("score")
+                         select new
+                         {
+                             Player = score.Attribute("player").Value,
+                             Value = score.Attribute("value").Value
+                         };
+
+            int offset = 5;
+            // Display the scores
+            foreach (var score in scores)
+            {
+                Engine.WriteFiglet(new Point(10, 40+offset), $"Player: {score.Player}, Score: {score.Value}", MainMenu.font1, 2);
+                offset += 5;
+            }
         }
     }
 }

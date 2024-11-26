@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\debughelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:debughelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,12 +15,12 @@
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\scores.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:scores.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,19 +30,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "DebugHelper.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\DebugHelper.cs",
               "RelativeDocumentMoniker": "DebugHelper.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\DebugHelper.cs",
               "RelativeToolTip": "DebugHelper.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAUwDkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-26T00:21:09.864Z",
+              "WhenOpened": "2024-11-26T04:33:27.72Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Scores.xml",
+              "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml",
+              "RelativeDocumentMoniker": "Scores.xml",
+              "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml",
+              "RelativeToolTip": "Scores.xml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2024-11-26T04:11:52.608Z",
               "EditorCaption": ""
             },
             {
@@ -49,33 +66,36 @@
               "RelativeDocumentMoniker": "MainMenu.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\MainMenu.cs",
               "RelativeToolTip": "MainMenu.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAowFsAAABnAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-24T15:52:36.92Z"
+              "WhenOpened": "2024-11-24T15:52:36.92Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeToolTip": "Player.cs",
-              "ViewState": "AgIAAHgAAAAAAAAAAAAmwHwAAABSAAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAgwEwAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-30T02:24:24.706Z"
+              "WhenOpened": "2024-10-30T02:24:24.706Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAcwDUAAABCAAAAAAAAAA==",
+              "ViewState": "AgIAAFIAAAAAAAAAAADwv1UAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T04:49:57.127Z"
+              "WhenOpened": "2024-10-29T04:49:57.127Z",
+              "EditorCaption": ""
             }
           ]
         }

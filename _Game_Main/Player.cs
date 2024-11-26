@@ -1,7 +1,6 @@
 ﻿using _Game_Main;
 using ConsoleGameEngine;
 using SharpDX.DirectInput;
-using static System.Net.Mime.MediaTypeNames;
 
 class Player : IDisposable
 {
@@ -9,10 +8,8 @@ class Player : IDisposable
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
-    private Program program;
+    private readonly Program program;
     private readonly MainMenu mainMenu;
-
-    private int borderColor = 1;
 
     private readonly int screenWidth;
     private readonly int screenHeight;
@@ -24,9 +21,11 @@ class Player : IDisposable
     public Point playerOnePosition;
     public List<Point> playerOneBullets = new List<Point>();
     public int playerOneLife = 5;
+    public bool isAlive;
 
     public bool isOnePlayer = true;
 
+    public int score = 0;
 
     public Point[] playerOne = {
         new Point(0,0),
@@ -38,16 +37,11 @@ class Player : IDisposable
         new Point(0,6)
     };
 
-
     private int attackCooldownFramesOne = 30;
     private int attackTimeOne = 0;
     private bool attackPressedOne = false;
 
-    private int attackCooldownFramesTwo = 30;
-    private int attackTimeTwo = 0;
-    private bool attackPressedTwo = false;
-
-    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, MainMenu mainMenu)
+    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, MainMenu mainMenu, Program program)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
@@ -80,6 +74,12 @@ class Player : IDisposable
         {
             Point newBullet = new Point(playerOnePosition.X, playerOnePosition.Y + 3);
             playerOneBullets.Add(newBullet);
+            score++;
+        }
+
+        if (keyboardState.IsPressed(Key.B))
+        {
+            LoseLife();
         }
 
         UpdateBullets(playerOneBullets);
@@ -140,8 +140,6 @@ class Player : IDisposable
         }
     }
 
-
-
     private void RenderBullets(List<Point> bullets, int color)
     {
         foreach (var bullet in bullets)
@@ -155,5 +153,14 @@ class Player : IDisposable
         keyboard.Unacquire();
         keyboard.Dispose();
         directInput.Dispose();
+    }
+
+    private void LoseLife()
+    {
+        playerOneLife--;
+        if (playerOneLife == 0)
+        {
+            program.RecordScore();
+        }
     }
 }

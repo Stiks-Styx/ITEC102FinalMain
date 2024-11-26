@@ -8,6 +8,7 @@ class MainMenu
     public static FigletFont font;
     public static FigletFont font1;
     private readonly Program program;
+    private readonly Player player;
 
     private Point[] selector = {new Point(0, 1), new Point(0, 2), new Point(0, 3), new Point(0, 4),
                                 new Point(56, 1), new Point(56, 2), new Point(56, 3), new Point(56, 4)};
@@ -22,7 +23,7 @@ class MainMenu
     private readonly int screenWidth;
     private readonly int screenHeight;
 
-    private readonly bool isPlaying;
+    public bool isPlaying;
 
     private int moveCooldown = 10;
     private int moveTime = 0;
@@ -42,16 +43,19 @@ class MainMenu
     private Keyboard keyboard;
     private KeyboardState keyboardState;
 
-    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight,bool isPlaying, Program program)
+    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight,bool isPlaying, Program program, Player player)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.program = program;
+        this.player = player;
 
         directInput = new DirectInput();
         keyboard = new Keyboard(directInput);
         keyboard.Acquire();
+        player = new Player(engine, new Point(10, screenHeight / 2), screenWidth, screenHeight, this, program);
+
     }
 
     public void Render()
@@ -75,6 +79,7 @@ class MainMenu
                 break;
             case "Scores":
                 // Additional rendering for other pages can go here
+                RenderScores();
                 break;
             case "Survival":
                 program.isPlaying = true;
@@ -189,7 +194,7 @@ class MainMenu
     // Render Scores
     private void RenderScores()
     {
-
+        program.ReadScore("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml");
     }
 
     private void RenderDebugInfo()
@@ -236,8 +241,8 @@ class MainMenu
             switch (selectorPosition.Y)
             {
                 case 25: currentPage = "1Player"; inputName1 = true; break;
-                case 35: currentPage = "Scores"; break;
-                case 40: ExitGame(); break;
+                case 30: currentPage = "Scores"; break;
+                case 35: ExitGame(); break;
             }
         }
     }
