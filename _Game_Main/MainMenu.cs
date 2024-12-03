@@ -5,16 +5,14 @@ using SharpDX.DirectInput;
 class MainMenu
 {
     private readonly ConsoleEngine engine;
-    public static FigletFont font;
-    public static FigletFont font1;
     private readonly Program program;
     private readonly Player player;
+    public static FigletFont font;
+    public static FigletFont font1;
 
     private Point[] selector = {new Point(0, 1), new Point(0, 2), new Point(0, 3), new Point(0, 4),
                                 new Point(56, 1), new Point(56, 2), new Point(56, 3), new Point(56, 4)};
-    public Point selectorPosition = new Point(165, 25);
-
-    private int borderColor = 1;
+    public Point selectorPosition = new Point(10, 25);
 
     public string player1Name = "";
 
@@ -43,19 +41,16 @@ class MainMenu
     private Keyboard keyboard;
     private KeyboardState keyboardState;
 
-    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight,bool isPlaying, Program program, Player player)
+    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight,bool isPlaying, Program program)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.program = program;
-        this.player = player;
 
         directInput = new DirectInput();
         keyboard = new Keyboard(directInput);
         keyboard.Acquire();
-        player = new Player(engine, new Point(10, screenHeight / 2), screenWidth, screenHeight, this, program);
-
     }
 
     public void Render()
@@ -64,14 +59,13 @@ class MainMenu
 
         engine.ClearBuffer();
 
-        RenderBorder();
         GameTitle();
 
         switch (currentPage)
         {
             case "MainMenu":
-                RenderMainMenu();
                 RenderSelector();
+                RenderMainMenu();
                 break;
             case "1Player":
                 Render1PlayerMenu();
@@ -96,31 +90,11 @@ class MainMenu
         font = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\3d.flf");
         font1 = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\smslant.flf");
     }
-    public void RenderBorder ()
-    {
-        for (int x = 0; x < screenWidth; x++)
-        {
-            engine.SetPixel(new Point(x, 0), borderColor, ConsoleCharacter.Full);
-            engine.SetPixel(new Point(x, screenHeight - 1), borderColor, ConsoleCharacter.Full);
-        }
 
-        // Render left and right borders
-        for (int y = 0; y < screenHeight; y++)
-        {
-            engine.SetPixel(new Point(0, y), borderColor, ConsoleCharacter.Full);
-            engine.SetPixel(new Point(screenWidth - 1, y), borderColor, ConsoleCharacter.Full);
-        }
-
-        for (int z = 0; z < screenHeight; z++)
-        {
-            engine.SetPixel(new Point(screenWidth-60, screenHeight-z), borderColor, ConsoleCharacter.Full);
-        }
-    }
     private void RenderSelector()
     {
         foreach (var item in selector)
         {
-            engine.SetPixel(new Point(item.X + selectorPosition.X, item.Y + selectorPosition.Y), 2, ConsoleCharacter.Full);
         }
     }
     // Render Game Title
@@ -145,39 +119,20 @@ class MainMenu
         // Iterate through menu options and calculate centered positions
         for (int i = 0; i < menuOptions.Length; i++)
         {
-            // Estimate the width of the text (assuming each character takes up 5 pixels)
-            int estimatedWidth = menuOptions[i].Length * 5;
-
-            // Calculate the starting X position for centering the text
-            int startX = (screenWidth - 60 - estimatedWidth) / 2;
-
-            // Write the Figlet text at the calculated position
-            engine.WriteFiglet(new Point(startX, 25 + (i * 5)), menuOptions[i], font1, 2);
+            engine.WriteFiglet(new Point(10, 25 + (i * 5)), menuOptions[i], font1, 2);
         }
     }
     // Render 1-Player Menu
     private void Render1PlayerMenu()
     {
-        int num = 6;
-        // Center the "Enter your name:" text
-        int enterTextWidth = "Enter your name:".Length * num; // Adjust multiplier as necessary
-        int startXEnter = (screenWidth - 60 - enterTextWidth) / 2;
-        engine.WriteFiglet(new Point(startXEnter, 20), "Enter your name:", font1, 2);
+        engine.WriteFiglet(new Point(10, 20), "Enter your name:", font1, 2);
 
-        // Center the player1Name text
-        int playerNameWidth = player1Name.Length * num; // Adjust multiplier as necessary
-        int startXName = (screenWidth - 60 - playerNameWidth) / 2;
-        engine.WriteFiglet(new Point(startXName, 25), player1Name, font1, 2);
+        engine.WriteFiglet(new Point(10, 25), player1Name, font1, 2);
 
-        // Center the "Survival" text
-        int survivalTextWidth = "Survival".Length * num; // Adjust multiplier as necessary
-        int startXSurvival = (screenWidth - 60 - survivalTextWidth) / 2;
-        engine.WriteFiglet(new Point(startXSurvival, 30), "Survival", font1, 2);
+        engine.WriteFiglet(new Point(10, 30), "Survival", font1, 2);
 
         // Center the "Back" text
-        int backTextWidth = "Back".Length * num; // Adjust multiplier as necessary
-        int startXBack = (screenWidth - 60 - backTextWidth) / 2;
-        engine.WriteFiglet(new Point(startXBack, 35), "Back", font1, 2);
+        engine.WriteFiglet(new Point(10, 35), "Back", font1, 2);
 
         if (engine.GetKey(ConsoleKey.Enter) && player1Name != "" && enterTime == 0)
         {
@@ -230,7 +185,7 @@ class MainMenu
         {
             selectorPosition.Y -= 5;
         }
-        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 40 && CanType(ref moveTime, moveCooldown))
+        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 35 && CanType(ref moveTime, moveCooldown))
         {
             selectorPosition.Y += 5;
         }

@@ -5,11 +5,11 @@ using SharpDX.DirectInput;
 class Player : IDisposable
 {
     private readonly ConsoleEngine engine;
+    private readonly Program program;
+    private readonly BorderRenderer borderRenderer;
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
-    private readonly Program program;
-    private readonly MainMenu mainMenu;
 
     private readonly int screenWidth;
     private readonly int screenHeight;
@@ -41,13 +41,13 @@ class Player : IDisposable
     private int attackTimeOne = 0;
     private bool attackPressedOne = false;
 
-    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, MainMenu mainMenu, Program program)
+    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, BorderRenderer borderRenderer,Program program)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        this.mainMenu = mainMenu;
         this.program = program;
+        this.borderRenderer = borderRenderer;
 
         directInput = new DirectInput();
         keyboard = new Keyboard(directInput);
@@ -120,7 +120,9 @@ class Player : IDisposable
     public void Render()
     {
         engine.ClearBuffer();
-        mainMenu.RenderBorder();
+
+        borderRenderer.RenderBorder();
+
         RenderPlayer(playerOne, playerOnePosition, playerOneColor); // for Player One
         RenderBullets(playerOneBullets, playerOneColor); // for Player One Bullets
 

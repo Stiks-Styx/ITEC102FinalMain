@@ -11,6 +11,7 @@ namespace _Game_Main
         private MainMenu menu;
         private Timer timer;
         private DebugHelper debugHelper; // Instance of DebugHelper
+        private BorderRenderer borderRenderer;
 
         public int Width { get; private set; } = 440;
         public int Height { get; private set; } = 115;
@@ -31,8 +32,9 @@ namespace _Game_Main
             TargetFramerate = 60;
 
             // Initialize MainMenu and DebugHelper
-            menu = new MainMenu(Engine, Width, Height, isPlaying, this, player);
-            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, menu, this);
+            borderRenderer = new BorderRenderer(Engine, Width, Height, this);
+            menu = new MainMenu(Engine, Width, Height, isPlaying, this);
+            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, borderRenderer, this);
 
             // Set up DebugHelper with dependencies
             debugHelper = new DebugHelper(Engine, MainMenu.font1, Height, menu.player1Name);
