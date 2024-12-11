@@ -7,11 +7,16 @@ namespace _Game_Main
 {
     class Program : ConsoleGame
     {
-        private Player player;
-        private MainMenu menu;
-        private Timer timer;
-        private DebugHelper debugHelper; // Instance of DebugHelper
-        private BorderRenderer borderRenderer;
+        private Player? player;
+        private MainMenu? menu;
+        private Timer? timer;
+        private DebugHelper? debugHelper;
+        private BorderRenderer? borderRenderer;
+        private CollisionDetector? collisionDetector;
+        private SoundPlayer? ambiencePlayer;
+        private bool isAmbiencePlaying = false;
+        private PauseRender? pauseRender;
+        private List<Enemy> enemies = new List<Enemy>();
 
         public int Width { get; private set; } = 440;
         public int Height { get; private set; } = 115;
@@ -20,7 +25,6 @@ namespace _Game_Main
         private static void Main(string[] args)
         {
             var program = new Program();
-
             program.Construct(program.Width, program.Height, 1, 1, FramerateMode.Unlimited);
         }
 
@@ -31,39 +35,48 @@ namespace _Game_Main
             Console.Title = "GAMER!!";
             TargetFramerate = 60;
 
-            // Initialize MainMenu and DebugHelper
             borderRenderer = new BorderRenderer(Engine, Width, Height, this);
             menu = new MainMenu(Engine, Width, Height, isPlaying, this);
-            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, borderRenderer, this);
+            collisionDetector = new CollisionDetector(Engine);
+            ambiencePlayer = new SoundPlayer("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\ambience.mp3");
+            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, borderRenderer, this, collisionDetector);
 
-            // Set up DebugHelper with dependencies
             debugHelper = new DebugHelper(Engine, MainMenu.font1, Height, menu.player1Name);
 
-            // Set a timer for the game loop (running every frame)
             ZoomOut();
             timer = new Timer(UpdateScreen, null, 0, 1000 / TargetFramerate);
+            pauseRender = new PauseRender(Engine);
         }
 
         private void UpdateScreen(object state)
         {
+            if (Engine.GetKey(ConsoleKey.Escape))
+            {
+                pauseRender?.TogglePause();
+            }
+
+            if (pauseRender?.IsPaused == true)
+            {
+                pauseRender.RenderPauseScreen();
+                return;
+            }
+
             if (isPlaying)
             {
-                // Update the player and enemies
-                player.Update();
-
-                // Render the player and enemies
-                player.Render();
-
-                //debugHelper.GameDebugInfo(menu.player1Name, null);
+                player.Update(enemies);
+                Enemy.ManageEnemies(Engine, enemies, Width, Height);
+                player.Render(enemies);
             }
             else
             {
-                // Render the menu
+                if (!isAmbiencePlaying)
+                {
+                    ambiencePlayer.Play();
+                    isAmbiencePlaying = true;
+                }
+
                 menu.Render();
                 menu.Update();
-
-                // Render debug info
-                //debugHelper.MenuDebugInfo(menu.currentPage, menu.selectorPosition);
             }
         }
 
@@ -81,10 +94,10 @@ namespace _Game_Main
         {
             var sim = new InputSimulator();
 
-            for (int i = 0; i < 8; i++) // Repeat 4 times
+            for (int i = 0; i < 8; i++)
             {
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.OEM_MINUS);
-                System.Threading.Thread.Sleep(100); // Optional: Add a small delay between key presses
+                Thread.Sleep(100);
             }
         }
 
@@ -117,15 +130,12 @@ namespace _Game_Main
 
             scoresElement.Add(scoreElement);
 
-            // Sort the scores in descending order by value
             var sortedScores = scoresElement.Elements("score")
                 .OrderByDescending(score => (int)score.Attribute("value"))
                 .ToList();
 
-            // Clear the existing scores
             scoresElement.RemoveAll();
 
-            // Add the sorted scores back to the "scores" element
             foreach (var score in sortedScores)
             {
                 scoresElement.Add(score);
@@ -136,10 +146,8 @@ namespace _Game_Main
 
         public void ReadScore(string filePath)
         {
-            // Load the XML document
             XDocument xdoc = XDocument.Load(filePath);
 
-            // Query the scores
             var scores = from score in xdoc.Descendants("score")
                          select new
                          {
@@ -148,10 +156,9 @@ namespace _Game_Main
                          };
 
             int offset = 5;
-            // Display the scores
             foreach (var score in scores)
             {
-                Engine.WriteFiglet(new Point(10, 40+offset), $"Player: {score.Player}, Score: {score.Value}", MainMenu.font1, 2);
+                Engine.WriteFiglet(new Point(10, 40 + offset), $"{score.Player}", MainMenu.font1, 7);
                 offset += 5;
             }
         }

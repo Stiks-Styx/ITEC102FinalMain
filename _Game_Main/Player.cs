@@ -7,6 +7,7 @@ class Player : IDisposable
     private readonly ConsoleEngine engine;
     private readonly Program program;
     private readonly BorderRenderer borderRenderer;
+    private readonly CollisionDetector collision;
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
@@ -14,10 +15,7 @@ class Player : IDisposable
     private readonly int screenWidth;
     private readonly int screenHeight;
 
-    // // //
     public int playerOneColor = 4;
-    // // //
-
     public Point playerOnePosition;
     public List<Point> playerOneBullets = new List<Point>();
     public int playerOneLife = 5;
@@ -41,13 +39,14 @@ class Player : IDisposable
     private int attackTimeOne = 0;
     private bool attackPressedOne = false;
 
-    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, BorderRenderer borderRenderer,Program program)
+    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, BorderRenderer borderRenderer, Program program, CollisionDetector collision)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.program = program;
         this.borderRenderer = borderRenderer;
+        this.collision = collision;
 
         directInput = new DirectInput();
         keyboard = new Keyboard(directInput);
@@ -57,33 +56,48 @@ class Player : IDisposable
         playerOnePosition = initialPosition;
     }
 
-    public void Update()
+    public void Update(List<Enemy> enemies)
     {
         keyboardState = keyboard.GetCurrentState();
         if (keyboardState == null)
             return;
 
-        // Player One Controls
         if (keyboardState.IsPressed(Key.W) && playerOnePosition.Y > 1) playerOnePosition.Y--;
-        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 5) playerOnePosition.Y++; // Adjusted for player height
-        if (keyboardState.IsPressed(Key.A) && playerOnePosition.X > 1) playerOnePosition.X--;
-        if (keyboardState.IsPressed(Key.D) && playerOnePosition.X < screenWidth - 65) playerOnePosition.X++; // Adjusted for player width
+        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 7) playerOnePosition.Y++;
+        if (keyboardState.IsPressed(Key.A) && playerOnePosition.X > 3) playerOnePosition.X--;
+        if (keyboardState.IsPressed(Key.D) && playerOnePosition.X < screenWidth - 4) playerOnePosition.X++;
 
-        // Player One Shooting
         if (keyboardState.IsPressed(Key.Space) && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
         {
-            Point newBullet = new Point(playerOnePosition.X, playerOnePosition.Y + 3);
-            playerOneBullets.Add(newBullet);
-            score++;
+            playerOneBullets.Add(new Point(playerOnePosition.X, playerOnePosition.Y + 3));
         }
 
-        if (keyboardState.IsPressed(Key.B))
+        UpdateBullets(playerOneBullets, enemies);
+
+        foreach (var enemy in enemies)
         {
-            LoseLife();
+            if (enemy.IsActive && collision.OnCollision(playerOnePosition, playerOne, enemy.GetEnemyPoints()))
+            {
+                LoseLife();
+                enemy.IsActive = false;
+            }
         }
+    }
 
-        UpdateBullets(playerOneBullets);
+    public void Render(List<Enemy> enemies)
+    {
+        engine.ClearBuffer();
+        RenderPlayer(playerOne, playerOnePosition, playerOneColor);
+        RenderBullets(playerOneBullets, playerOneColor);
 
+        foreach (var enemy in enemies)
+        {
+            if (enemy.IsActive)
+            {
+                enemy.Render();
+            }
+        }
+        engine.DisplayBuffer();
     }
 
     private bool CanAttack(ref int attackTime, int cooldownFrames, ref bool attackPressed)
@@ -99,55 +113,57 @@ class Player : IDisposable
         return false;
     }
 
-    private void UpdateBullets(List<Point> bullets)
+    private void UpdateBullets(List<Point> bullets, List<Enemy> enemies)
     {
         for (int i = bullets.Count - 1; i >= 0; i--)
         {
             Point newBullet = new Point(bullets[i].X + 1, bullets[i].Y);
 
-            // Check if the bullet is within the screen's horizontal bounds.
-            if (newBullet.X < screenWidth - 60)
+            if (newBullet.X < screenWidth - 3)
             {
-                bullets[i] = newBullet; // Update the bullet's position.
+                bullets[i] = newBullet;
             }
             else
             {
-                bullets.RemoveAt(i); // Remove the bullet if it goes off-screen.
+                bullets.RemoveAt(i);
+                continue;
+            }
+
+            foreach (var enemy in enemies)
+            {
+                if (enemy.IsActive && IsBulletCollidingWithEnemy(newBullet, enemy))
+                {
+                    enemy.OnHit(enemies);
+                    bullets.RemoveAt(i);
+                    break;
+                }
             }
         }
-    }
-
-    public void Render()
-    {
-        engine.ClearBuffer();
-
-        borderRenderer.RenderBorder();
-
-        RenderPlayer(playerOne, playerOnePosition, playerOneColor); // for Player One
-        RenderBullets(playerOneBullets, playerOneColor); // for Player One Bullets
-
-        engine.DisplayBuffer();
     }
 
     public void RenderPlayer(Point[] player, Point position, int color)
     {
         List<Point> playerHitbox = new List<Point>();
 
-        // Add the player's segments to the hitbox
         foreach (var item in player)
         {
             Point playerHitBox = new Point(item.X + position.X, item.Y + position.Y);
-            playerHitbox.Add(playerHitBox); // Add each calculated segment to the hitbox list
-            engine.SetPixel(playerHitBox, color, ConsoleCharacter.Full); // Render the segment on the screen
+            playerHitbox.Add(playerHitBox);
+            engine.SetPixel(playerHitBox, color, ConsoleCharacter.Full);
         }
     }
 
     private void RenderBullets(List<Point> bullets, int color)
     {
-        foreach (var bullet in bullets)
+        try
         {
-            engine.SetPixel(bullet, color, ConsoleCharacter.Full);
+
+            foreach (var bullet in bullets)
+            {
+                engine.SetPixel(bullet, color, ConsoleCharacter.Full);
+            }
         }
+        catch (InvalidOperationException) { }
     }
 
     public void Dispose()
@@ -164,5 +180,23 @@ class Player : IDisposable
         {
             program.RecordScore();
         }
+    }
+
+    private bool IsBulletCollidingWithEnemy(Point bullet, Enemy enemy)
+    {
+        int width = enemy.Type == 1 ? 6 : 12;
+        int height = enemy.Type == 1 ? 4 : 8;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (bullet.Equals(new Point(enemy.Position.X + x, enemy.Position.Y + y)))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

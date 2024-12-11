@@ -1,5 +1,4 @@
-﻿
-using _Game_Main;
+﻿using _Game_Main;
 using ConsoleGameEngine;
 
 class BorderRenderer
@@ -8,6 +7,8 @@ class BorderRenderer
     private readonly Program program;
     private readonly int screenWidth, screenHeight;
     private int borderColor = 1;
+    private string[] borderDesign = { "[", "■", "]" };
+    private string borderDesign1 = "[■]";
 
     public BorderRenderer(ConsoleEngine engine, int screenWidth, int screenHeight, Program program)
     {
@@ -19,22 +20,30 @@ class BorderRenderer
 
     public void RenderBorder()
     {
+        // Render top and bottom borders using the borderDesign array
         for (int x = 0; x < screenWidth; x++)
         {
-            engine.SetPixel(new Point(x, 0), borderColor, ConsoleCharacter.Full);
-            engine.SetPixel(new Point(x, screenHeight - 1), borderColor, ConsoleCharacter.Full);
+            string topBottomChar = borderDesign[x % borderDesign.Length]; // Cycle through borderDesign
+            engine.WriteText(new Point(x, 0), topBottomChar, borderColor); // Top border
+            engine.WriteText(new Point(x, screenHeight - 1), topBottomChar, borderColor); // Bottom border
+            engine.WriteText(new Point(x, 16), topBottomChar, borderColor); // Additional bottom border
         }
 
-        // Render left and right borders
+        // Render left and right borders using the borderDesign array
         for (int y = 0; y < screenHeight; y++)
         {
-            engine.SetPixel(new Point(0, y), borderColor, ConsoleCharacter.Full);
-            engine.SetPixel(new Point(screenWidth - 1, y), borderColor, ConsoleCharacter.Full);
+            engine.WriteText(new Point(0, y), borderDesign1, borderColor); // Left border
+            engine.WriteText(new Point(screenWidth - 3, y), borderDesign1, borderColor); // Right border
         }
 
-        for (int z = 0; z < screenHeight; z++)
+        /*// Optionally render a vertical divider using borderDesign
+        if (screenWidth > 60)
         {
-            engine.SetPixel(new Point(screenWidth - 60, screenHeight - z), borderColor, ConsoleCharacter.Full);
-        }
+            for (int z = 0; z < screenHeight; z++)
+            {
+                string dividerBorder = string.Join("", borderDesign); // Simplified to join the design
+                engine.WriteText(new Point(screenWidth - 57, z), dividerBorder, borderColor); // Divider
+            }
+        }*/
     }
 }

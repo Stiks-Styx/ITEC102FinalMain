@@ -50,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "CSCore": {
+              "target": "Package",
+              "version": "[1.2.1.2, )"
+            },
             "InputSimulator": {
               "target": "Package",
               "version": "[1.0.4, )"

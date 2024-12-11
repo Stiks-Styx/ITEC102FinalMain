@@ -7,8 +7,8 @@
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:mainmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:enemy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -17,6 +17,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\borderrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:borderrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\soundplayer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|solutionrelative:soundplayer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1CEA8F15-677D-4398-A6A0-88AEE8603E11}|_Game_Main.csproj|c:\\users\\styx\\desktop\\itec102finalmain\\_game_main\\scores.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
@@ -30,8 +38,34 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Enemy.cs",
+              "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Enemy.cs",
+              "RelativeDocumentMoniker": "Enemy.cs",
+              "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Enemy.cs",
+              "RelativeToolTip": "Enemy.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAAADoAAABOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-11T03:58:49.692Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SoundPlayer.cs",
+              "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\SoundPlayer.cs",
+              "RelativeDocumentMoniker": "SoundPlayer.cs",
+              "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\SoundPlayer.cs",
+              "RelativeToolTip": "SoundPlayer.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAQwBIAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-11T03:57:33.8Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 3,
@@ -40,14 +74,14 @@
               "RelativeDocumentMoniker": "BorderRenderer.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\BorderRenderer.cs",
               "RelativeToolTip": "BorderRenderer.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAAACUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-02T23:23:33.543Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Scores.xml",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml",
               "RelativeDocumentMoniker": "Scores.xml",
@@ -66,7 +100,7 @@
               "RelativeDocumentMoniker": "MainMenu.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\MainMenu.cs",
               "RelativeToolTip": "MainMenu.cs",
-              "ViewState": "AgIAAFIAAAAAAAAAAAAiwGQAAABUAAAAAAAAAA==",
+              "ViewState": "AgIAAHMAAAAAAAAAAAAAAIEAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-24T15:52:36.92Z",
               "EditorCaption": ""
@@ -79,26 +113,23 @@
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeToolTip": "Player.cs",
-<<<<<<< Updated upstream
-              "ViewState": "AgIAACMAAAAAAAAAAAAQwHsAAAAmAAAAAAAAAA==",
-=======
-              "ViewState": "AgIAAK8AAAAAAAAAAAAUwLsAAAAuAAAAAAAAAA==",
->>>>>>> Stashed changes
+              "ViewState": "AgIAAJUAAAAAAAAAAAD4v6UAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-30T02:24:24.706Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAACMAAABGAAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAA9v////8PwEQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T04:49:57.127Z"
+              "WhenOpened": "2024-10-29T04:49:57.127Z",
+              "EditorCaption": ""
             }
           ]
         }

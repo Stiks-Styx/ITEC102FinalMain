@@ -41,7 +41,7 @@ class MainMenu
     private Keyboard keyboard;
     private KeyboardState keyboardState;
 
-    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight,bool isPlaying, Program program)
+    public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight, bool isPlaying, Program program)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
@@ -72,7 +72,6 @@ class MainMenu
                 if (!inputName1) RenderSelector();
                 break;
             case "Scores":
-                // Additional rendering for other pages can go here
                 RenderScores();
                 break;
             case "Survival":
@@ -84,7 +83,6 @@ class MainMenu
         engine.DisplayBuffer();
     }
 
-    // Methods for Rendering Stuff
     private void LoadFonts()
     {
         font = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\3d.flf");
@@ -95,58 +93,42 @@ class MainMenu
     {
         foreach (var item in selector)
         {
+            engine.SetPixel(new Point(item.X + selectorPosition.X, item.Y + selectorPosition.Y), 7, ConsoleCharacter.Full);
         }
     }
-    // Render Game Title
+
     private void GameTitle()
     {
         string title = "VOID  INVADER";
-
-        // Estimate the width of the title (assuming each character takes 5 pixels, adjust as needed)
         int estimatedWidth = title.Length * 8;
-
-        // Calculate the starting X position for centering the title
         int startX = (screenWidth - 60 - estimatedWidth) / 2;
-
-        // Render the title at the calculated position
-        engine.WriteFiglet(new Point(startX, 10), title, font, 2);
+        engine.WriteFiglet(new Point(startX, 10), title, font, 7);
     }
 
     private void RenderMainMenu()
     {
         string[] menuOptions = { "1-Player", "Scores", "Exit" };
-
-        // Iterate through menu options and calculate centered positions
         for (int i = 0; i < menuOptions.Length; i++)
         {
-            engine.WriteFiglet(new Point(10, 25 + (i * 5)), menuOptions[i], font1, 2);
+            engine.WriteFiglet(new Point(10, 25 + (i * 5)), menuOptions[i], font1, 7);
         }
     }
-    // Render 1-Player Menu
+
     private void Render1PlayerMenu()
     {
-        engine.WriteFiglet(new Point(10, 20), "Enter your name:", font1, 2);
-
-        engine.WriteFiglet(new Point(10, 25), player1Name, font1, 2);
-
-        engine.WriteFiglet(new Point(10, 30), "Survival", font1, 2);
-
-        // Center the "Back" text
-        engine.WriteFiglet(new Point(10, 35), "Back", font1, 2);
+        engine.WriteFiglet(new Point(10, 20), "Enter your name:", font1, 7);
+        engine.WriteFiglet(new Point(10, 25), player1Name, font1, 7);
+        engine.WriteFiglet(new Point(10, 30), "Survival", font1, 7);
+        engine.WriteFiglet(new Point(10, 35), "Back", font1, 7);
 
         if (engine.GetKey(ConsoleKey.Enter) && player1Name != "" && enterTime == 0)
         {
             enterTime = enterCooldown;
             inputName1 = false;
+            selectorPosition = new Point(10, 30);
         }
     }
 
-    private void RenderSurvival()
-    {
-
-    }
-
-    // Render Scores
     private void RenderScores()
     {
         program.ReadScore("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml");
@@ -157,7 +139,6 @@ class MainMenu
         string debugInfo = $"Page: {currentPage}, Selector Position: {selectorPosition.X}, {selectorPosition.Y}";
         engine.WriteFiglet(new Point(10, screenHeight-5), debugInfo, font1,2);
     }
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
 
     public void Update()
     {
@@ -178,7 +159,7 @@ class MainMenu
 
         HandleKeyboardInput();
     }
-    // Methods for Update
+
     private void HandleMainMenuInput()
     {
         if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y > 25 && CanType(ref moveTime, moveCooldown))
@@ -254,10 +235,8 @@ class MainMenu
         Environment.Exit(0);
     }
 
-    // Handle keyboard input to type the player's name
     private void HandleKeyboardInput()
     {
-
         if (!inputName1 ) return;
 
         if (keyboardState.IsPressed(Key.Back) && CanType(ref delTime, delCooldown))
@@ -283,7 +262,6 @@ class MainMenu
         }
     }
 
-    // Convert the key to a character (you can extend this for other key codes)
     private char GetCharacterFromKey(Key key)
     {
         switch (key)
