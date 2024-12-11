@@ -79,7 +79,11 @@
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeToolTip": "Player.cs",
+<<<<<<< Updated upstream
               "ViewState": "AgIAACMAAAAAAAAAAAAQwHsAAAAmAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAAK8AAAAAAAAAAAAUwLsAAAAuAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-30T02:24:24.706Z",
               "EditorCaption": ""
@@ -94,8 +98,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAAACMAAABGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-29T04:49:57.127Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-29T04:49:57.127Z"
             }
           ]
         }
