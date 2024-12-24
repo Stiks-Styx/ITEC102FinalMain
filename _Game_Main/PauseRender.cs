@@ -22,9 +22,17 @@ class PauseRender
         if (isPaused)
         {
             engine.ClearBuffer();
-            engine.WriteText(new Point(20, 10), "Game Paused", 7);
+            engine.WriteFiglet(new Point(20, 10), "Game Paused", MainMenu.font1, 7);
             engine.DisplayBuffer();
         }
+    }
+
+    public void GameOver()
+    {
+        engine.ClearBuffer();
+        engine.WriteFiglet(new Point(20, 10), "Game Over", MainMenu.font1, 7);
+        engine.WriteFiglet(new Point(20, 15), "Press Enter to return to Main Menu", MainMenu.font1, 7);
+        engine.DisplayBuffer();
     }
 }
 

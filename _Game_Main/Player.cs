@@ -26,20 +26,29 @@ class Player : IDisposable
     public int score = 0;
 
     public Point[] playerOne = {
-        new Point(0,0),
-        new Point(0,1), new Point(1,1), new Point(2,1),
-        new Point(0,2), new Point(1,2), new Point(2,2), new Point(3,2),
-        new Point(0,3), new Point(1,3), new Point(2,3), new Point(3,3), new Point(4,3),
-        new Point(0,4), new Point(1,4), new Point(2,4), new Point(3,4),
-        new Point(0,5), new Point(1,5), new Point(2,5),
-        new Point(0,6)
+        new Point(0,0), new Point(1,0), new Point(2,0), new Point(3,0), new Point(4,0),
+        new Point(5,0), new Point(6,0), new Point(7,0), new Point(8,0), new Point(9,0),
+        new Point(10,0), new Point(11,0), new Point(12,0), new Point(13,0), new Point(14,0),
+        new Point(15,0), new Point(16,0), new Point(17,0),
+        new Point(1, -1), new Point(2, -1), new Point(3, -1), new Point(4, -1),
+        new Point(5, -1), new Point(6, -1), new Point(7, -1), new Point(8, -1),
+        new Point(9, -1), new Point(10, -1), new Point(11, -1), new Point(12, -1),
+        new Point(13, -1), new Point(14, -1), new Point(15, -1),
+        new Point(1, 1), new Point(2, 1), new Point(3, 1), new Point(4, 1),
+        new Point(5, 1), new Point(6, 1), new Point(7, 1), new Point(8, 1),
+        new Point(9, 1), new Point(10, 1), new Point(11, 1), new Point(12, 1),
+        new Point(13, 1), new Point(14, 1), new Point(15, 1)
     };
 
     private int attackCooldownFramesOne = 30;
     private int attackTimeOne = 0;
     private bool attackPressedOne = false;
 
-    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, BorderRenderer borderRenderer, Program program, CollisionDetector collision)
+    private readonly GameDisplay gameDisplay;
+
+    private bool scoreRecorded = false;
+
+    public Player(ConsoleEngine engine, Point initialPosition, int screenWidth, int screenHeight, BorderRenderer borderRenderer, Program program, CollisionDetector collision, MainMenu mainMenu)
     {
         this.engine = engine;
         this.screenWidth = screenWidth;
@@ -54,39 +63,68 @@ class Player : IDisposable
 
         isOnePlayer = true;
         playerOnePosition = initialPosition;
+
+        gameDisplay = new GameDisplay(engine, this, mainMenu);
     }
 
-    public void Update(List<Enemy> enemies)
+    public void Update(List<Enemy> enemies, List<Enemy> lifeCubes)
     {
         keyboardState = keyboard.GetCurrentState();
         if (keyboardState == null)
             return;
 
-        if (keyboardState.IsPressed(Key.W) && playerOnePosition.Y > 1) playerOnePosition.Y--;
-        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 7) playerOnePosition.Y++;
+        if (keyboardState.IsPressed(Key.W) && playerOnePosition.Y > 17) playerOnePosition.Y--;
+        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 8) playerOnePosition.Y++;
         if (keyboardState.IsPressed(Key.A) && playerOnePosition.X > 3) playerOnePosition.X--;
         if (keyboardState.IsPressed(Key.D) && playerOnePosition.X < screenWidth - 4) playerOnePosition.X++;
 
         if (keyboardState.IsPressed(Key.Space) && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
         {
-            playerOneBullets.Add(new Point(playerOnePosition.X, playerOnePosition.Y + 3));
+            playerOneBullets.Add(new Point(playerOnePosition.X + 15, playerOnePosition.Y));
         }
 
         UpdateBullets(playerOneBullets, enemies);
+        try
+        {
+            foreach (var enemy in enemies)
+            {
+                if (enemy.IsActive && collision.OnCollision(playerOnePosition, playerOne, enemy.GetEnemyPoints()))
+                {
+                    if (enemy.Type == 0)
+                    {
+                        playerOneLife += enemy.OnCollisionWithPlayer();
+                        enemy.IsActive = false;
+                    }
+                    else
+                    {
+                        LoseLife();
+                        enemy.IsActive = false;
+                    }
+                }
+            }
 
+        }
+        catch (Exception) { }
+
+        // Update enemies' PlayerY property to match the player's Y position
         foreach (var enemy in enemies)
         {
-            if (enemy.IsActive && collision.OnCollision(playerOnePosition, playerOne, enemy.GetEnemyPoints()))
-            {
-                LoseLife();
-                enemy.IsActive = false;
-            }
+            enemy.PlayerY = playerOnePosition.Y; // Set the PlayerY for each enemy
         }
+
+        // Call ManageEnemies with the current score
+        Enemy.ManageEnemies(engine, enemies, screenWidth, screenHeight, score);
+
+        CheckLifeCubeCollision(lifeCubes);
     }
 
     public void Render(List<Enemy> enemies)
     {
         engine.ClearBuffer();
+
+        // Render the border
+        borderRenderer.RenderBorder();
+
         RenderPlayer(playerOne, playerOnePosition, playerOneColor);
         RenderBullets(playerOneBullets, playerOneColor);
 
@@ -97,6 +135,9 @@ class Player : IDisposable
                 enemy.Render();
             }
         }
+
+        gameDisplay.Render();
+
         engine.DisplayBuffer();
     }
 
@@ -115,30 +156,37 @@ class Player : IDisposable
 
     private void UpdateBullets(List<Point> bullets, List<Enemy> enemies)
     {
-        for (int i = bullets.Count - 1; i >= 0; i--)
+        try
         {
-            Point newBullet = new Point(bullets[i].X + 1, bullets[i].Y);
+            for (int i = bullets.Count - 1; i >= 0; i--)
+            {
+                Point newBullet = new Point(bullets[i].X + 1, bullets[i].Y);
 
-            if (newBullet.X < screenWidth - 3)
-            {
-                bullets[i] = newBullet;
-            }
-            else
-            {
-                bullets.RemoveAt(i);
-                continue;
-            }
-
-            foreach (var enemy in enemies)
-            {
-                if (enemy.IsActive && IsBulletCollidingWithEnemy(newBullet, enemy))
+                if (newBullet.X < screenWidth - 3)
                 {
-                    enemy.OnHit(enemies);
-                    bullets.RemoveAt(i);
-                    break;
+                    bullets[i] = newBullet;
                 }
+                else
+                {
+                    bullets.RemoveAt(i);
+                    continue;
+                }
+                try
+                {
+                    foreach (var enemy in enemies)
+                    {
+                        if (enemy.IsActive && IsBulletCollidingWithEnemy(newBullet, enemy))
+                        {
+                            score += enemy.OnHit(enemies);
+                            bullets.RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
+                catch (System.InvalidOperationException) { }
             }
         }
+        catch (System.ArgumentOutOfRangeException) { }
     }
 
     public void RenderPlayer(Point[] player, Point position, int color)
@@ -157,13 +205,15 @@ class Player : IDisposable
     {
         try
         {
-
             foreach (var bullet in bullets)
             {
                 engine.SetPixel(bullet, color, ConsoleCharacter.Full);
             }
         }
-        catch (InvalidOperationException) { }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine("An error occurred while rendering bullets: " + ex.Message);
+        }
     }
 
     public void Dispose()
@@ -175,10 +225,31 @@ class Player : IDisposable
 
     private void LoseLife()
     {
-        playerOneLife--;
-        if (playerOneLife == 0)
+        if (playerOneLife > 0)
         {
-            program.RecordScore();
+            playerOneLife--;
+        }
+
+        if (playerOneLife <= 0)
+        {
+            if (!scoreRecorded)
+            {
+                scoreRecorded = true;
+                program.RecordScore();
+            }
+
+            program.pauseRender?.GameOver();
+
+            // Wait for Enter key to return to main menu
+            while (!engine.GetKey(ConsoleKey.Enter))
+            {
+                Thread.Sleep(100); // Prevents busy-waiting
+            }
+
+            // Reset game state or navigate to main menu
+            // Set isPlaying to false to stop the game loop
+            program.isPlaying = false;
+            program.menu?.ResetToMainMenu();
         }
     }
 
@@ -198,5 +269,17 @@ class Player : IDisposable
             }
         }
         return false;
+    }
+
+    private void CheckLifeCubeCollision(List<Enemy> lifeCubes)
+    {
+        for (int i = lifeCubes.Count - 1; i >= 0; i--)
+        {
+            if (collision.OnCollision(playerOnePosition, playerOne, lifeCubes[i].GetEnemyPoints()))
+            {
+                playerOneLife++; // Increase player life
+                lifeCubes.RemoveAt(i); // Remove the life cube after collision
+            }
+        }
     }
 }

@@ -35,15 +35,5 @@ class BorderRenderer
             engine.WriteText(new Point(0, y), borderDesign1, borderColor); // Left border
             engine.WriteText(new Point(screenWidth - 3, y), borderDesign1, borderColor); // Right border
         }
-
-        /*// Optionally render a vertical divider using borderDesign
-        if (screenWidth > 60)
-        {
-            for (int z = 0; z < screenHeight; z++)
-            {
-                string dividerBorder = string.Join("", borderDesign); // Simplified to join the design
-                engine.WriteText(new Point(screenWidth - 57, z), dividerBorder, borderColor); // Divider
-            }
-        }*/
     }
 }

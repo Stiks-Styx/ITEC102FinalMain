@@ -21,16 +21,14 @@ class MainMenu
     private readonly int screenWidth;
     private readonly int screenHeight;
 
-    public bool isPlaying;
-
     private int moveCooldown = 10;
     private int moveTime = 0;
 
     private int typeCooldown = 8;
     private int typeTime = 0;
 
-    private int enterCooldown = 8; 
-    private int enterTime = 0;      
+    private int enterCooldown = 8;
+    private int enterTime = 0;
 
     private int delCooldown = 8;
     private int delTime = 0;
@@ -40,6 +38,8 @@ class MainMenu
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
+
+    private bool isTransitioningToScores = false; // Flag to indicate transition
 
     public MainMenu(ConsoleEngine engine, int screenWidth, int screenHeight, bool isPlaying, Program program)
     {
@@ -67,12 +67,15 @@ class MainMenu
                 RenderSelector();
                 RenderMainMenu();
                 break;
-            case "1Player":
+            case "Play":
                 Render1PlayerMenu();
                 if (!inputName1) RenderSelector();
                 break;
             case "Scores":
                 RenderScores();
+                break;
+            case "Tutorial":
+                RenderTutorial();
                 break;
             case "Survival":
                 program.isPlaying = true;
@@ -85,8 +88,8 @@ class MainMenu
 
     private void LoadFonts()
     {
-        font = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\3d.flf");
-        font1 = FigletFont.Load("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\smslant.flf");
+        font = FigletFont.Load("Fonts\\3d.flf");
+        font1 = FigletFont.Load("Fonts\\smslant.flf");
     }
 
     private void RenderSelector()
@@ -107,7 +110,7 @@ class MainMenu
 
     private void RenderMainMenu()
     {
-        string[] menuOptions = { "1-Player", "Scores", "Exit" };
+        string[] menuOptions = { "Play", "Scores", "Tutorial", "Exit" };
         for (int i = 0; i < menuOptions.Length; i++)
         {
             engine.WriteFiglet(new Point(10, 25 + (i * 5)), menuOptions[i], font1, 7);
@@ -125,19 +128,59 @@ class MainMenu
         {
             enterTime = enterCooldown;
             inputName1 = false;
-            selectorPosition = new Point(10, 30);
         }
     }
 
     private void RenderScores()
     {
-        program.ReadScore("C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Scores.xml");
+        if (isTransitioningToScores)
+        {
+            // Reset the transition flag after rendering scores
+            isTransitioningToScores = false;
+            return; // Prevent immediate return to main menu
+        }
+
+        var scores = program.ReadScore("Scores/Scores.xml");
+
+        // Display message to return to main menu
+        engine.WriteFiglet(new Point(10, screenHeight - 10), "Press Enter to return to Main Menu", font1, 7);
+
+        int offset = 5;
+        int columnOffset = 0;
+        int maxScoresPerColumn = 10;
+
+        for (int i = 0; i < scores.Count; i++)
+        {
+            if (i == maxScoresPerColumn)
+            {
+                // Move to the second column
+                columnOffset = 120; // Adjust this value based on your screen width
+                offset = 5; // Reset offset for the new column
+            }
+
+            var score = scores[i];
+            engine.WriteFiglet(new Point(10 + columnOffset, 40 + offset), $"{i + 1}: {score.Player}", font1, 7);
+            engine.WriteFiglet(new Point(100 + columnOffset, 40 + offset), $"{score.Value}", font1, 7);
+            offset += 5;
+        }
+
+        // Check for Enter key press to return to main menu
+        if (engine.GetKey(ConsoleKey.Enter) && enterTime == 0)
+        {
+            enterTime = enterCooldown;
+            ResetToMainMenu();
+        }
+    }
+
+    private void RenderTutorial()
+    {
+
     }
 
     private void RenderDebugInfo()
     {
         string debugInfo = $"Page: {currentPage}, Selector Position: {selectorPosition.X}, {selectorPosition.Y}";
-        engine.WriteFiglet(new Point(10, screenHeight-5), debugInfo, font1,2);
+        engine.WriteFiglet(new Point(10, screenHeight - 5), debugInfo, font1, 2);
     }
 
     public void Update()
@@ -152,8 +195,11 @@ class MainMenu
             case "MainMenu":
                 HandleMainMenuInput();
                 break;
-            case "1Player":
+            case "Play":
                 Handle1PlayerMenuInput();
+                break;
+            case "Tutorial":
+                HandleTutorialInput();
                 break;
         }
 
@@ -162,23 +208,36 @@ class MainMenu
 
     private void HandleMainMenuInput()
     {
+        // Move the selector up and down
         if (engine.GetKey(ConsoleKey.W) && selectorPosition.Y > 25 && CanType(ref moveTime, moveCooldown))
         {
             selectorPosition.Y -= 5;
         }
-        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 35 && CanType(ref moveTime, moveCooldown))
+        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 40 && CanType(ref moveTime, moveCooldown)) // Adjusted to 40 for the new option
         {
             selectorPosition.Y += 5;
         }
 
+        // Check for Enter key press
         if (engine.GetKey(ConsoleKey.Enter) && enterTime == 0)
         {
-            enterTime = enterCooldown;
+            enterTime = enterCooldown; // Set cooldown for Enter key
             switch (selectorPosition.Y)
             {
-                case 25: currentPage = "1Player"; inputName1 = true; break;
-                case 30: currentPage = "Scores"; break;
-                case 35: ExitGame(); break;
+                case 25:
+                    currentPage = "Play";
+                    inputName1 = true;
+                    break;
+                case 30:
+                    isTransitioningToScores = true; // Set the transition flag
+                    currentPage = "Scores";
+                    break;
+                case 35:
+                    // render tutorial pages 1 - 3
+                    break;
+                case 40:
+                    ExitGame();
+                    break;
             }
         }
     }
@@ -190,7 +249,7 @@ class MainMenu
         {
             selectorPosition.Y -= 5;
         }
-        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 35 && CanType(ref moveTime, moveCooldown))
+        else if (engine.GetKey(ConsoleKey.S) && selectorPosition.Y < 40 && CanType(ref moveTime, moveCooldown))
         {
             selectorPosition.Y += 5;
         }
@@ -209,6 +268,10 @@ class MainMenu
         }
     }
 
+    private void HandleTutorialInput()
+    {
+    }
+
     private bool CanType(ref int moveTime, int moveCooldown)
     {
         if (moveTime == 0)
@@ -220,10 +283,10 @@ class MainMenu
         return false;
     }
 
-    private void ResetToMainMenu()
+    public void ResetToMainMenu()
     {
         currentPage = "MainMenu";
-        selectorPosition = new Point(165, 25);
+        selectorPosition = new Point(10, 25);
         player1Name = "";
         inputName1 = false;
     }
@@ -237,7 +300,7 @@ class MainMenu
 
     private void HandleKeyboardInput()
     {
-        if (!inputName1 ) return;
+        if (!inputName1) return;
 
         if (keyboardState.IsPressed(Key.Back) && CanType(ref delTime, delCooldown))
         {
@@ -292,7 +355,7 @@ class MainMenu
             case Key.X: return 'X';
             case Key.Y: return 'Y';
             case Key.Z: return 'Z';
-                
+
             default: return '\0'; // Return null character for unrecognized keys
         }
     }
