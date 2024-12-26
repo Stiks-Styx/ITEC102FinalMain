@@ -46,20 +46,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 6,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "GameDisplay.cs",
-              "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\GameDisplay.cs",
-              "RelativeDocumentMoniker": "GameDisplay.cs",
-              "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\GameDisplay.cs",
-              "RelativeToolTip": "GameDisplay.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAQwBcAAAA+AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-13T07:17:28.437Z"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -68,7 +56,7 @@
               "RelativeDocumentMoniker": "Enemy.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Enemy.cs",
               "RelativeToolTip": "Enemy.cs",
-              "ViewState": "AgIAAIoAAAAAzszMzMwqwDIAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAAADMAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-11T03:58:49.692Z",
               "EditorCaption": ""
@@ -83,8 +71,7 @@
               "RelativeToolTip": "SoundPlayer.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAQwBwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-11T03:57:33.8Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-11T03:57:33.8Z"
             },
             {
               "$type": "Document",
@@ -96,8 +83,7 @@
               "RelativeToolTip": "BorderRenderer.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAiwCQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-02T23:23:33.543Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-02T23:23:33.543Z"
             },
             {
               "$type": "Document",
@@ -109,8 +95,7 @@
               "RelativeToolTip": "MainMenu.cs",
               "ViewState": "AgIAAOUAAAAAAAAAAAAAAOsAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-24T15:52:36.92Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-24T15:52:36.92Z"
             },
             {
               "$type": "Document",
@@ -120,7 +105,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAA4AAAAAm5mZmZkSwBQAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAAADcAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-29T04:49:57.127Z",
               "EditorCaption": ""
@@ -135,8 +120,7 @@
               "RelativeToolTip": "PauseRender.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAAABsAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-13T07:40:27.379Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-13T07:40:27.379Z"
             },
             {
               "$type": "Document",
@@ -146,10 +130,22 @@
               "RelativeDocumentMoniker": "Player.cs",
               "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\Player.cs",
               "RelativeToolTip": "Player.cs",
-              "ViewState": "AgIAAKoAAAAAAAAAAAAcwLgAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAPEAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-30T02:24:24.706Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GameDisplay.cs",
+              "DocumentMoniker": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\GameDisplay.cs",
+              "RelativeDocumentMoniker": "GameDisplay.cs",
+              "ToolTip": "C:\\Users\\Styx\\Desktop\\ITEC102FinalMain\\_Game_Main\\GameDisplay.cs",
+              "RelativeToolTip": "GameDisplay.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAQwBcAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-13T07:17:28.437Z"
             },
             {
               "$type": "Document",

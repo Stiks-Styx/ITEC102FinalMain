@@ -78,8 +78,8 @@ public class Enemy
             IsActive = false; // Deactivate if it's not a type 0 enemy
         }
 
-        // Chance to spawn a life cube (25%)
-        if (random.NextDouble() < 0.25)
+        // Chance to spawn a life cube (5%)
+        if (random.NextDouble() < 0.05)
         {
             SpawnLifeCube(Position.X, Position.Y, enemies); // Call the method to spawn a life cube
         }
@@ -129,13 +129,13 @@ public class Enemy
         // Adjust spawn rate based on player score
         if (playerScore % 250 == 0 && playerScore > 0) // Change cooldown every 250 points
         {
-            spawnCooldown = Math.Max(80, 200 - (playerScore / 10)); // Decrease cooldown to a minimum of 20 frames
+            spawnCooldown = Math.Max(100, 200 - (playerScore / 10)); // Decrease cooldown to a minimum of 20 frames
         }
 
         // Handle enemy spawning
         if (currentCooldown <= 0)
         {
-            int type = random.Next(1, 4); // Randomly choose between type 1, type 2, and type 3
+            int type = random.Next(1, 6); // Randomly choose between type 1, type 2, and type 3
             int yPosition = random.Next(17, screenHeight - (type == 1 ? 6 : 12)); // Ensure enemy spawns within vertical bounds
             enemies.Add(new Enemy(engine, new Point(screenWidth - 1, yPosition), type));
             currentCooldown = spawnCooldown / enemySpeed; // Adjust cooldown based on speed

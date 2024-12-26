@@ -127,15 +127,18 @@ class Player : IDisposable
 
         RenderPlayer(playerOne, playerOnePosition, playerOneColor);
         RenderBullets(playerOneBullets, playerOneColor);
-
-        foreach (var enemy in enemies)
+        try
         {
-            if (enemy.IsActive)
+            foreach (var enemy in enemies)
             {
-                enemy.Render();
+                if (enemy.IsActive)
+                {
+                    enemy.Render();
+                }
             }
         }
-
+        catch (System.InvalidOperationException) { }
+        
         gameDisplay.Render();
 
         engine.DisplayBuffer();
@@ -223,13 +226,8 @@ class Player : IDisposable
         directInput.Dispose();
     }
 
-    private void LoseLife()
+    private async Task LoseLife()
     {
-        if (playerOneLife > 0)
-        {
-            playerOneLife--;
-        }
-
         if (playerOneLife <= 0)
         {
             if (!scoreRecorded)
@@ -243,7 +241,7 @@ class Player : IDisposable
             // Wait for Enter key to return to main menu
             while (!engine.GetKey(ConsoleKey.Enter))
             {
-                Thread.Sleep(100); // Prevents busy-waiting
+                await Task.Delay(100); // Prevents busy-waiting
             }
 
             // Reset game state or navigate to main menu
@@ -255,8 +253,8 @@ class Player : IDisposable
 
     private bool IsBulletCollidingWithEnemy(Point bullet, Enemy enemy)
     {
-        int width = enemy.Type == 1 ? 6 : 12;
-        int height = enemy.Type == 1 ? 4 : 8;
+        int width = enemy.Type == 1 ? 6 : (enemy.Type == 0 ? 3 : 12);
+        int height = enemy.Type == 1 ? 4 : (enemy.Type == 0 ? 2 : 8);
 
         for (int x = 0; x < width; x++)
         {
