@@ -16,6 +16,8 @@ namespace _Game_Main
         private SoundPlayer? ambiencePlayer;
         public PauseRender? pauseRender;
         private GameDisplay? gameDisplay;
+        private GameLoading? gameLoading;
+        private Enemy? enemy;
         private bool isAmbiencePlaying = false;
         private List<Enemy> enemies = new List<Enemy>();
         private List<Enemy> lifeCubes = new List<Enemy>();
@@ -23,6 +25,7 @@ namespace _Game_Main
         public int Width { get; private set; } = 440;
         public int Height { get; private set; } = 115;
         public bool isPlaying { get; set; } = false;
+        private bool isGameOver = false; // New flag to indicate game over
 
         private int pauseCooldown = 10; // Cooldown in frames
         private int pauseTime = 0;
@@ -35,29 +38,31 @@ namespace _Game_Main
 
         public override void Create()
         {
-            Engine.SetPalette(Palettes.Pico8);
-            Engine.Borderless();
-            Console.Title = "GAMER!!";
-            TargetFramerate = 60;
 
+            Engine.SetPalette(Palettes.Pico8);
+            Console.Title = "Void Invader";
+            TargetFramerate = 30;
+
+            gameLoading = new GameLoading(Engine, Width, Height);
             borderRenderer = new BorderRenderer(Engine, Width, Height, this);
             menu = new MainMenu(Engine, Width, Height, isPlaying, this);
             collisionDetector = new CollisionDetector(Engine);
             ambiencePlayer = new SoundPlayer(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sounds", "ambience.mp3"));
             player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, borderRenderer, this, collisionDetector, menu);
-
             debugHelper = new DebugHelper(Engine, MainMenu.font1, Height, menu.player1Name);
+            gameDisplay = new GameDisplay(Engine, player, menu);
 
-            //ZoomOut();
+            ZoomOut();
             timer = new Timer(UpdateScreen, null, 0, 1000 / TargetFramerate);
             pauseRender = new PauseRender(Engine);
         }
 
         private void UpdateScreen(object state)
         {
-            // Handle pause with cooldown only when the game is playing
             if (isPlaying)
             {
+                player?.Update(enemies, lifeCubes);
+
                 if (pauseTime > 0) pauseTime--;
 
                 if (Engine.GetKey(ConsoleKey.Escape) && pauseTime == 0)
@@ -71,23 +76,56 @@ namespace _Game_Main
                     pauseRender.RenderPauseScreen();
                     return;
                 }
-
-                player.Update(enemies, lifeCubes);
+                if (player?.playerOneLife <= 0)
+                {
+                    isPlaying = false;
+                    isGameOver = true; // Set game over flag
+                    pauseRender?.GameOver();
+                    return;
+                }
                 Enemy.ManageEnemies(Engine, enemies, Width, Height, player.score);
                 player.Render(enemies);
+
+            }
+            else if (isGameOver)
+            {
+                pauseRender?.GameOver();
+                if (Engine.GetKey(ConsoleKey.Enter))
+                {
+                    ResetGame();
+                }
             }
             else
             {
-                if (!isAmbiencePlaying)
+                if (gameLoading.doneLoading == false)
                 {
-                    ambiencePlayer.Play();
-                    isAmbiencePlaying = true;
+                    gameLoading.DisplayLoadingScreen();
                 }
+                else
+                {
+                    // audio not working
+                    if (!isAmbiencePlaying)
+                    {
+                        ambiencePlayer.Play();
+                        isAmbiencePlaying = true;
+                    }
 
-                menu.Render();
-                menu.Update();
+                    menu.Render();
+                    menu.Update();
+                }
             }
         }
+
+        private void ResetGame()
+        {
+            isGameOver = false;
+            isPlaying = false;
+            player = new Player(Engine, new Point(10, (Height / 2)), Width, Height, borderRenderer, this, collisionDetector, menu);
+            enemies.Clear();
+            lifeCubes.Clear();
+            menu.ResetToMainMenu();
+        }
+
 
         public override void Render()
         {
@@ -114,39 +152,44 @@ namespace _Game_Main
         {
             try
             {
-                XDocument document;
                 string filePath = "Scores\\Scores.xml";
 
-                XElement scoreElement = new XElement("score",
-                    new XAttribute("player", menu.player1Name),
-                    new XAttribute("value", player.score));
+                // Ensure directory exists
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-                if (!File.Exists(filePath))
+                XElement scoreElement = new XElement("score",
+                    new XAttribute("player", menu?.player1Name ?? "Unknown Player"),
+                    new XAttribute("value", player?.score ?? 0),
+                    new XAttribute("escapedEnemies", Enemy.escEnemy)); // Use proper static property
+
+                XDocument document;
+
+                if (File.Exists(filePath))
+                {
+                    document = XDocument.Load(filePath);
+                }
+                else
                 {
                     document = new XDocument(
                         new XDeclaration("1.0", "UTF-8", "yes"),
                         new XElement("scores"));
-                    document.Save(filePath);
                 }
 
-                document = XDocument.Load(filePath);
-
-                XElement scoresElement = document.Root.Element("scores");
-
+                XElement scoresElement = document.Root;
                 if (scoresElement == null)
                 {
                     scoresElement = new XElement("scores");
-                    document.Root.Add(scoresElement);
+                    document.Add(scoresElement);
                 }
 
                 scoresElement.Add(scoreElement);
 
+                // Sort scores by value in descending order
                 var sortedScores = scoresElement.Elements("score")
-                    .OrderByDescending(score => (int)score.Attribute("value"))
+                    .OrderByDescending(score => (int?)score.Attribute("value") ?? 0)
                     .ToList();
 
-                scoresElement.RemoveAll();
-
+                scoresElement.RemoveAll(); // Clear current scores
                 foreach (var score in sortedScores)
                 {
                     scoresElement.Add(score);
@@ -160,32 +203,30 @@ namespace _Game_Main
             }
         }
 
-        public List<(string Player, string Value)> ReadScore(string filePath)
+
+        public List<(string Player, string Value, string EscapedEnemies)> ReadScore(string filePath)
         {
-            var scoreList = new List<(string Player, string Value)>();
+            var scores = new List<(string Player, string Value, string EscapedEnemies)>();
 
-            try
+            if (File.Exists(filePath))
             {
-                XDocument xdoc = XDocument.Load(filePath);
+                var document = XDocument.Load(filePath);
+                var scoreElements = document.Root?.Elements("score") ?? Enumerable.Empty<XElement>();
 
-                var scores = from score in xdoc.Descendants("score")
-                             select new
-                             {
-                                 Player = score.Attribute("player").Value,
-                                 Value = score.Attribute("value").Value
-                             };
-
-                foreach (var score in scores)
+                foreach (var scoreElement in scoreElements)
                 {
-                    scoreList.Add((score.Player, score.Value));
+                    var player = scoreElement.Attribute("player")?.Value;
+                    var value = scoreElement.Attribute("value")?.Value;
+                    var escapedEnemies = scoreElement.Attribute("escapedEnemies")?.Value;
+
+                    if (player != null && value != null && escapedEnemies != null)
+                    {
+                        scores.Add((player, value, escapedEnemies));
+                    }
                 }
             }
-            catch (IOException ex)
-            {
-                Console.WriteLine("An error occurred while reading the scores: " + ex.Message);
-            }
 
-            return scoreList;
+            return scores;
         }
     }
 }

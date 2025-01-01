@@ -11,7 +11,7 @@ class SoundPlayer
     private VolumeSource _volumeSource;
 
     // Default constructor for ambience sound
-    public SoundPlayer() : this("Sounds/ambience.mp3") // Default path
+    public SoundPlayer() : this("./Sounds/ambience.mp3") // Default path
     {
     }
 

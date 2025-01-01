@@ -5,6 +5,7 @@ class GameDisplay
     private readonly ConsoleEngine engine;
     private readonly Player player;
     private readonly MainMenu mainMenu;
+    private readonly Enemy enemy;
 
     public GameDisplay(ConsoleEngine engine, Player player, MainMenu mainMenu)
     {
@@ -21,6 +22,7 @@ class GameDisplay
         // Display player life using the font from MainMenu
         engine.WriteFiglet(new Point(4, 10), $"Player Life: {player.playerOneLife}", MainMenu.font1, 7);
 
-        engine.WriteFiglet(new Point(Console.WindowWidth - 150, 3), $"Score: {player.score}", MainMenu.font1, 7);
+        engine.WriteFiglet(new Point(Console.WindowWidth - 180, 3), $"Score: {player.score}", MainMenu.font1, 7);
+        engine.WriteFiglet(new Point(Console.WindowWidth - 180, 10), $"Escaped Enemy: {Enemy.escEnemy}", MainMenu.font1, 7);
     }
 }

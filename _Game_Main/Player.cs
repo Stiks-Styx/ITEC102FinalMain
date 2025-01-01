@@ -8,6 +8,7 @@ class Player : IDisposable
     private readonly Program program;
     private readonly BorderRenderer borderRenderer;
     private readonly CollisionDetector collision;
+    private readonly Enemy enemy;
     private DirectInput directInput;
     private Keyboard keyboard;
     private KeyboardState keyboardState;
@@ -37,7 +38,19 @@ class Player : IDisposable
         new Point(1, 1), new Point(2, 1), new Point(3, 1), new Point(4, 1),
         new Point(5, 1), new Point(6, 1), new Point(7, 1), new Point(8, 1),
         new Point(9, 1), new Point(10, 1), new Point(11, 1), new Point(12, 1),
-        new Point(13, 1), new Point(14, 1), new Point(15, 1)
+        new Point(13, 1), new Point(14, 1), new Point(15, 1),
+        new Point(2, 2), new Point(3, 2), new Point(4, 2), new Point(5, 2),
+        new Point(6, 2), new Point(7, 2), new Point(8, 2), new Point(9, 2),
+        new Point(10, 2), new Point(11, 2), new Point(12, 2), new Point(13, 2),
+        new Point(14, 2),
+        new Point(2, -2), new Point(3, -2), new Point(4, -2), new Point(5, -2),
+        new Point(6, -2), new Point(7, -2), new Point(8, -2), new Point(9, -2),
+        new Point(10, -2), new Point(11, -2), new Point(12, -2), new Point(13, -2),
+        new Point(14, -2),
+        new Point(3, 3), new Point(4, 3), new Point(5, 3), new Point(6, 3),
+        new Point(7, 3), new Point(8, 3), new Point(9, 3), new Point(10, 3),
+        new Point(3, -3), new Point(4, -3), new Point(5, -3), new Point(6, -3),
+        new Point(7, -3), new Point(8, -3), new Point(9, -3), new Point(10, -3),
     };
 
     private int attackCooldownFramesOne = 30;
@@ -73,14 +86,15 @@ class Player : IDisposable
         if (keyboardState == null)
             return;
 
-        if (keyboardState.IsPressed(Key.W) && playerOnePosition.Y > 17) playerOnePosition.Y--;
-        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 8) playerOnePosition.Y++;
-        if (keyboardState.IsPressed(Key.A) && playerOnePosition.X > 3) playerOnePosition.X--;
-        if (keyboardState.IsPressed(Key.D) && playerOnePosition.X < screenWidth - 4) playerOnePosition.X++;
+        if (keyboardState.IsPressed(Key.W) && playerOnePosition.Y > 21) playerOnePosition.Y -= 2;
+        if (keyboardState.IsPressed(Key.S) && playerOnePosition.Y < screenHeight - 6) playerOnePosition.Y += 2;
+        if (keyboardState.IsPressed(Key.A) && playerOnePosition.X > 3) playerOnePosition.X -= 2;
+        if (keyboardState.IsPressed(Key.D) && playerOnePosition.X < screenWidth - 18) playerOnePosition.X += 2;
 
         if (keyboardState.IsPressed(Key.Space) && CanAttack(ref attackTimeOne, attackCooldownFramesOne, ref attackPressedOne))
         {
-            playerOneBullets.Add(new Point(playerOnePosition.X + 15, playerOnePosition.Y));
+            playerOneBullets.Add(new Point(playerOnePosition.X+ 5, playerOnePosition.Y -2));
+            playerOneBullets.Add(new Point(playerOnePosition.X+ 5, playerOnePosition.Y +2));
         }
 
         UpdateBullets(playerOneBullets, enemies);
@@ -102,7 +116,6 @@ class Player : IDisposable
                     }
                 }
             }
-
         }
         catch (Exception) { }
 
@@ -138,7 +151,7 @@ class Player : IDisposable
             }
         }
         catch (System.InvalidOperationException) { }
-        
+
         gameDisplay.Render();
 
         engine.DisplayBuffer();
@@ -228,6 +241,8 @@ class Player : IDisposable
 
     private async Task LoseLife()
     {
+        playerOneLife--; // Deduct life when this method is called
+
         if (playerOneLife <= 0)
         {
             if (!scoreRecorded)
@@ -236,18 +251,13 @@ class Player : IDisposable
                 program.RecordScore();
             }
 
-            program.pauseRender?.GameOver();
+            // program.pauseRender?.GameOver();
 
             // Wait for Enter key to return to main menu
             while (!engine.GetKey(ConsoleKey.Enter))
             {
                 await Task.Delay(100); // Prevents busy-waiting
             }
-
-            // Reset game state or navigate to main menu
-            // Set isPlaying to false to stop the game loop
-            program.isPlaying = false;
-            program.menu?.ResetToMainMenu();
         }
     }
 
