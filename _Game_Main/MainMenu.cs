@@ -6,9 +6,8 @@ class MainMenu
 {
     private readonly ConsoleEngine engine;
     private readonly Program program;
-    private readonly Player player;
-    public static FigletFont font;
-    public static FigletFont font1;
+    public static FigletFont? font;
+    public static FigletFont? font1;
 
     private Point[] selector = {new Point(0, 1), new Point(0, 2), new Point(0, 3), new Point(0, 4),
                                 new Point(56, 1), new Point(56, 2), new Point(56, 3), new Point(56, 4)};
@@ -88,8 +87,8 @@ class MainMenu
 
     private void LoadFonts()
     {
-        font = FigletFont.Load("Fonts\\3d.flf");
-        font1 = FigletFont.Load("Fonts\\smslant.flf");
+        font = FigletFont.Load("Fonts/3d.flf");
+        font1 = FigletFont.Load("Fonts/smslant.flf");
     }
 
     private void RenderSelector()

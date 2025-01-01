@@ -48,7 +48,7 @@ namespace _Game_Main
 
             debugHelper = new DebugHelper(Engine, MainMenu.font1, Height, menu.player1Name);
 
-            ZoomOut();
+            //ZoomOut();
             timer = new Timer(UpdateScreen, null, 0, 1000 / TargetFramerate);
             pauseRender = new PauseRender(Engine);
         }

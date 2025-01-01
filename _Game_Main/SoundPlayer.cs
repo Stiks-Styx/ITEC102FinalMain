@@ -7,7 +7,7 @@ using CSCore.Streams;
 class SoundPlayer
 {
     private ISoundOut _soundOut;
-    private IWaveSource _waveSource;
+    private IWaveSource? _waveSource;
     private VolumeSource _volumeSource;
 
     // Default constructor for ambience sound
