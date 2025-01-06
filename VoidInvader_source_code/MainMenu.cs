@@ -27,10 +27,10 @@ class MainMenu
     private int moveCooldown = 7;
     private int moveTime = 0;
 
-    private int typeCooldown = 5;
+    private int typeCooldown = 4;
     private int typeTime = 0;
 
-    private int enterCooldown = 5;
+    private int enterCooldown = 6;
     private int enterTime = 0;
 
     private int delCooldown = 5;
@@ -343,6 +343,7 @@ class MainMenu
             if (selectorPosition.Y == 30)
             {
                 currentPage = "Survival";
+                Enemy.escEnemy = 0;
             }
             else if (selectorPosition.Y == 35)
             {
